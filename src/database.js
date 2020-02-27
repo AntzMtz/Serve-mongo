@@ -9,8 +9,8 @@ mongodb.connect(conMongo, {
         useNewUrlParser: true,
         useFindAndModify: true,
         useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useMongoClient: true
+        useNewUrlParser: true
+        // useMongoClient: true
     })
     .then(() => {
         console.log(mongodb.Collection);

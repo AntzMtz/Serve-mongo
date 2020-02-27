@@ -1,5 +1,6 @@
+   /* https://uigradients.com/ */
 body {
-    /* https://uigradients.com/ */
+ 
     background: #BBD2C5;
     background: -webkit-linear-gradient(to right, #292E49, #536976, #BBD2C5);
     background: linear-gradient(to right, #292E49, #536976, #BBD2C5);
@@ -8,4 +9,13 @@ body {
 #login {
     width: 100px;
     height: 100px;
+}
+#H4t{
+    background-color: black;
+    color: blanchedalmond;
+}
+
+#Cuad{
+    padding: 13px;
+    /* margin-top: 3px auto; */
 }

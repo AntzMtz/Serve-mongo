@@ -12,11 +12,15 @@ router.post('/notes/newnote', async(req, res) => {
     const errors = [];
     if (!titulo) {
         errors.push({ text: 'Porfavor escribe un titulo' });
-    } else if (!descripcion) {
+    } 
+    
+    if (!descripcion) {
         errors.push({ text: 'Porfavor escribe una descripción' });
     }
 
     if (errors.length > 0) {
+        console.log(errors);
+        
         res.render('notes/newnote', {
             errors,
             titulo,
@@ -28,12 +32,19 @@ router.post('/notes/newnote', async(req, res) => {
         await nuevaNota.save();
         // console.log('nuevaNota');
 
-        res.send('/notes')
+        res.redirect('/notes')
     }
 });
 
-router.get('/notes', (req, res) => {
-    res.render('./users/singin.hbs')
+router.get('/notes', async (req, res) => {
+    
+    const datosBD= await Nota.find()
+    // console.log(datosBD)
+
+    res.render('notes/findNote',{ 
+        datosBD
+        
+    })
 });
 
 module.exports = router;
