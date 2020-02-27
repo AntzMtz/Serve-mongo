@@ -1,0 +1,11 @@
+body {
+    /* https://uigradients.com/ */
+    background: #BBD2C5;
+    background: -webkit-linear-gradient(to right, #292E49, #536976, #BBD2C5);
+    background: linear-gradient(to right, #292E49, #536976, #BBD2C5);
+}
+
+#login {
+    width: 100px;
+    height: 100px;
+}
