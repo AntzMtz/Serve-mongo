@@ -28,13 +28,14 @@ app.set('view engine', '.hbs');
 
 //middlewares
 app.use(express.urlencoded({ extended: true }));
-// app.use(metoOver('_method'));
+app.use(metoOver('_method'));
 app.use(session({
     secret: 'AntzMtz',
     resave: false,
     saveUninitialized: false
 }));
 app.use(morgan('dev'));
+
 //Variables Globales
 
 //rutas

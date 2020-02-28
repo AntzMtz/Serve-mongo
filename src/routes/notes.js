@@ -38,7 +38,7 @@ router.post('/notes/newnote', async(req, res) => {
 
 router.get('/notes', async (req, res) => {
     
-    const datosBD= await Nota.find()
+    const datosBD= await Nota.find().sort({"dia":-1})
     // console.log(datosBD)
 
     res.render('notes/findNote',{ 
@@ -46,5 +46,28 @@ router.get('/notes', async (req, res) => {
         
     })
 });
+
+router.get('/notes/edit/:id', async (req,res)=>{
+    const dato=req.params.id;
+    const datosBD1 = await Nota.find({"_id":dato})
+    // const datosBD = await Nota.findById(req.params.id);
+    console.log(datosBD1[0]);
+    const datosBD=datosBD1[0];
+    res.render('notes/editNote',{datosBD});
+});
+router.put('/notes/editNote/:id',async (req,res)=>{
+    const {titulo,descripcion}=req.body;
+    await Nota.findByIdAndUpdate(req.params.id,{titulo,descripcion})
+    res.redirect('/notes')
+
+})
+
+router.delete('/notes/editNote/:id', async(req,res)=>{
+    console.log(req.params.id);
+    await Nota.findByIdAndDelete(req.params.id)
+    res.redirect('/notes')
+})
+
+
 
 module.exports = router;
