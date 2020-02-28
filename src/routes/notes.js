@@ -60,13 +60,13 @@ router.put('/notes/editNote/:id',async (req,res)=>{
     await Nota.findByIdAndUpdate(req.params.id,{titulo,descripcion})
     res.redirect('/notes')
 
-})
+});
 
 router.delete('/notes/editNote/:id', async(req,res)=>{
     console.log(req.params.id);
     await Nota.findByIdAndDelete(req.params.id)
     res.redirect('/notes')
-})
+});
 
 
 
