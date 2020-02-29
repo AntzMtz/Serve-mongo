@@ -39,7 +39,13 @@ router.post('/users/signup', (req, res) => {
     if (error_mesa.length > 0) {
         errors.push({ text: errores_dis });
         req.flash('error_ms', errores_dis);
-        res.render('users/singup',{errors})
+        res.render('users/singup',{
+            errors,
+            usuario,
+            Nombre, 
+            password, 
+            password1
+        })
     } else {
         req.flash('success', "Los datos son correctos");
         res.redirect('/notes');
