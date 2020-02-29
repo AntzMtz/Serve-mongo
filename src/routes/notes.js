@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Nota = require('../models/Notes')
+const { format } = require('timeago.js');
 
 router.get('/notes/add', (req, res) => {
     res.render('notes/newnote');
@@ -29,10 +30,20 @@ router.post('/notes/newnote', async(req, res) => {
     } else {
         const nuevaNota = new Nota({ titulo, descripcion });
         console.log(nuevaNota);
-        await nuevaNota.save();
+        try {
+            await nuevaNota.save();    
+            req.flash('success','Se inserto el registro ' + titulo + ' de forma correcta');
+        } catch (error) {
+            if(error.code=='11000'){
+                req.flash('error_ms',"La tarea ya existe, No puede ser agregada");
+            }else{
+                req.flash('error_ms',"error: "+error.message);
+            }
+        }
+        
         // console.log('nuevaNota');
-
-        res.redirect('/notes')
+        
+        res.redirect('/notes');
     }
 });
 
@@ -57,14 +68,33 @@ router.get('/notes/edit/:id', async (req,res)=>{
 });
 router.put('/notes/editNote/:id',async (req,res)=>{
     const {titulo,descripcion}=req.body;
-    await Nota.findByIdAndUpdate(req.params.id,{titulo,descripcion})
+    try {
+        await Nota.findByIdAndUpdate(req.params.id,{titulo,descripcion})
+        req.flash('success','Modificación correcta del registro: ' + titulo);    
+    } catch (error) {
+        if(error.code=='11000'){
+            req.flash('error_ms',"La tarea ya existe, No puede ser modificada");
+        }else{
+            req.flash('error_ms',"error: "+error.message);
+        }
+        
+    }
+    
     res.redirect('/notes')
 
 });
 
 router.delete('/notes/editNote/:id', async(req,res)=>{
-    console.log(req.params.id);
-    await Nota.findByIdAndDelete(req.params.id)
+    console.log("Body: "+req.params.id);
+    try {
+        const del= await Nota.findByIdAndDelete(req.params.id);
+        // console.log(del.titulo);
+        req.flash('success','Se elimino el registro '+del.titulo+" de forma exitosa");
+        
+    } catch (error) {
+        req.flash('error_ms',error.message );
+    }
+    
     res.redirect('/notes')
 });
 

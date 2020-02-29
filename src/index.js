@@ -22,6 +22,7 @@ app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
+    helpers:require('./lib/hander'),
     extname: '.hbs'
 }));
 app.set('view engine', '.hbs');
@@ -35,9 +36,13 @@ app.use(session({
     saveUninitialized: false
 }));
 app.use(morgan('dev'));
-
+app.use(flash());
 //Variables Globales
-
+app.use((req,res, next)=>{
+    res.locals.success=req.flash('success');
+    res.locals.error_ms=req.flash('error_ms');
+    next();
+});
 //rutas
 app.use(require('./routes/index'));
 app.use(require('./routes/users'));
