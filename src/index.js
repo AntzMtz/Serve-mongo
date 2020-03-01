@@ -6,14 +6,14 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const msySqlstore = require('express-mysql-session');
 const metoOver = require('method-override');
-
+const passport = require('passport');
 // const { database } = require('./keys')
 const pasport = require('passport')
 
 //inicializar
 const app = express();
 require('./database');
-
+require('./config/pasport');
 
 //Configuraciones
 app.set('port', process.env.PORT || 5000);
@@ -35,12 +35,16 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+app.use(pasport.initialize());
+app.use(pasport.session());
 app.use(morgan('dev'));
 app.use(flash());
+
 //Variables Globales
 app.use((req,res, next)=>{
     res.locals.success=req.flash('success');
     res.locals.error_ms=req.flash('error_ms');
+    res.locals.error=req.flash('error');
     next();
 });
 //rutas

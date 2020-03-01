@@ -1,16 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/user')
+const passport = require('passport');
 router.get('/users/singin', (req, res) => {
     res.render('./users/singin')
 });
+
+router.post('/users/singin',passport.authenticate('local',{
+    successRedirect: '/notes',
+    failureRedirect: '/users/singin',
+    failureFlash:true
+}));
 
 router.get('/users/signup', (req, res) => {
     res.render('./users/singup')
 });
 
 router.post('/users/signup', async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { usuario, Nombre, password, password1 } = req.body;
     error_mesa = [];
     if (password != password1) {
@@ -32,7 +39,7 @@ router.post('/users/signup', async (req, res) => {
         } else {
             errores_dis += valor.text + " , ";
         }
-        console.log("En el índice " + indice + " hay este valor: " + valor.text);
+        // console.log("En el índice " + indice + " hay este valor: " + valor.text);
     });
 
     const errors = [];
