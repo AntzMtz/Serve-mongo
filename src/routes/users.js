@@ -2,21 +2,24 @@ const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/user')
 const passport = require('passport');
-router.get('/users/singin', (req, res) => {
+
+const {isLoggedIn, isNotLoggedIn}=require('../lib/aut');
+
+router.get('/users/singin', isNotLoggedIn,(req, res) => {
     res.render('./users/singin')
 });
 
-router.post('/users/singin',passport.authenticate('local',{
+router.post('/users/singin',isNotLoggedIn, passport.authenticate('local.signin', {
     successRedirect: '/notes',
     failureRedirect: '/users/singin',
-    failureFlash:true
+    failureFlash: true
 }));
 
-router.get('/users/signup', (req, res) => {
+router.get('/users/signup', isNotLoggedIn,(req, res) => {
     res.render('./users/singup')
 });
 
-router.post('/users/signup', async (req, res) => {
+router.post('/users/signup', isNotLoggedIn,async (req, res) => {
     // console.log(req.body);
     const { usuario, Nombre, password, password1 } = req.body;
     error_mesa = [];

@@ -1,6 +1,6 @@
 const mongoDb = require('mongoose');
 const { Schema } = mongoDb;
-console.log("esquema");
+// console.log("esquema");
 const bcrypt = require('bcryptjs');
 var UserSchema = new Schema({
     idUser: { type: String, required: true },
@@ -15,8 +15,19 @@ UserSchema.methods.encrypPass= async (password)=>{
     return hash;
 };
 
-UserSchema.methods.desCript= async function (password){
-    return await bcrypt.compare(password,this.Password)
-};
+// UserSchema.methods.desCript= async (password, savePassword) => {
+//     console.log("pass    :" + password);
+//     console.log("passSave:" + savePassword);
+//     return await bcry.compare(password, savePassword);
+// };
+
+// UserSchema.methods.desCript= async function (password, savePassword){
+//     console.log("pass    :" + password);
+//     console.log("passSave:" + savePassword);
+//     return await bcry.compare(password, savePassword);
+//     // return await bcrypt.compare(password,this.Password)
+// };
+
+
 
 module.exports = mongoDb.model('usuarios01', UserSchema);

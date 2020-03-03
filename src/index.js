@@ -45,8 +45,14 @@ app.use((req,res, next)=>{
     res.locals.success=req.flash('success');
     res.locals.error_ms=req.flash('error_ms');
     res.locals.error=req.flash('error');
+    app.locals.usuario = req.user;
     next();
 });
+
+
+
+
+
 //rutas
 app.use(require('./routes/index'));
 app.use(require('./routes/users'));
