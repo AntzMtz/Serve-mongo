@@ -1,8 +1,10 @@
-<video id="preview" width="300" height="300"></video>
+<video id="video" width="300" height="300"></video>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+
+
 <script>
     try {
         navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then((stream) => {
