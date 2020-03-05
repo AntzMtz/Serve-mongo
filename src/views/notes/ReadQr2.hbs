@@ -4,6 +4,7 @@
  <h1>Lector de QR</h1>
 
     <video id="preview" width="300" height="300"></video>
+    <input type="text" id="texto">
     <script type="text/javascript">
     
         // var encrypted = CryptoJS.AES.encrypt("AntzMtzRz", "");
@@ -12,16 +13,17 @@
             video: document.getElementById('preview')
         });
         scanner.addListener('scan', function(content) {
-            var encrypted=content;
-            var deEncrBoat= atob(encrypted);
-            var decrypted = CryptoJS.AES.decrypt(deEncrBoat, "");
-            var derr=decrypted.toString(CryptoJS.enc.Utf8);
+            //var encrypted=content;
+            //var deEncrBoat= atob(encrypted);
+            //var decrypted = CryptoJS.AES.decrypt(deEncrBoat, "");
+            //var derr=decrypted.toString(CryptoJS.enc.Utf8);
             
-            console.log("conent: "+content);
-            console.log("Boat: "+deEncrBoat);
-            console.log("Desec: "+decrypted);
+            //console.log("conent: "+content);
+            //console.log("Boat: "+deEncrBoat);
+            //console.log("Desec: "+decrypted);
             
-            console.log("Nombre: "+derr);
+            console.log("Nombre: "+content);
+            document.getElementById("texto").value=content;
 
         });
         Instascan.Camera.getCameras().then(function(cameras) {
