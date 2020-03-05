@@ -7,7 +7,14 @@
 
 <script>
     try {
-        navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then((stream) => {
+
+        //var supports = navigator.mediaDevices.getSupportedConstraints();
+        //if (!supports["facingMode"]) {
+            // Handle lack of browser support if necessary 
+        //}
+          navigator.mediaDevices.getUserMedia({ video: {facingMode: {exact:"environment"}}}).then((stream) => {
+        //navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then((stream) => {
+
             console.log(stream)
             let video = document.getElementById('video');
 
