@@ -6,25 +6,28 @@
 
 
 <script>
-    try {
+    let scanner = new Instascan.Scanner({
+        video: document.getElementById('preview')
+    });
+    scanner.addListener('scan', function (content) {
+        var encrypted = content;
+        var deEncrBoat = atob(encrypted);
+        var decrypted = CryptoJS.AES.decrypt(deEncrBoat, "");
+        var derr = decrypted.toString(CryptoJS.enc.Utf8);
 
-        //var supports = navigator.mediaDevices.getSupportedConstraints();
-        //if (!supports["facingMode"]) {
-            // Handle lack of browser support if necessary 
-        //}
-          navigator.mediaDevices.getUserMedia({ video: {facingMode: {exact:"environment"}}}).then((stream) => {
-        //navigator.mediaDevices.getUserMedia({ audio: false, video: true }).then((stream) => {
+        console.log("conent: " + content);
+        console.log("Boat: " + deEncrBoat);
+        console.log("Desec: " + decrypted);
 
-            console.log(stream)
-            let video = document.getElementById('video');
-
-            video.srcObject = stream;
-        })
-    } catch (error) {
-        console.log(error)
-    }
-
-
-
-
+        console.log("Nombre: " + derr);
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+            scanner.start(cameras[2]);
+        } else {
+            console.error('No cameras found.');
+        }
+    }).catch(function (e) {
+        console.error(e);
+    });
 </script>
