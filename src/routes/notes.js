@@ -77,7 +77,7 @@ router.get('/notes', isLoggedIn,async (req, res) => {
     })
 });
 
-router.get('/notes/ReadQR', isLoggedIn, async(req,res)=>{
+router.get('/notes/ReadQR', async(req,res)=>{
     res.render('notes/readQr');
 });
 
