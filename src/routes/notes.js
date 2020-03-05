@@ -77,6 +77,10 @@ router.get('/notes', isLoggedIn,async (req, res) => {
     })
 });
 
+router.get('/notes/ReadQR', isLoggedIn, async(req,res)=>{
+    res.render('notes/readQr');
+});
+
 router.get('/notes/edit/:id',isLoggedIn, async (req, res) => {
     const dato = req.params.id;
     const datosBD1 = await Nota.find({ "_id": dato })

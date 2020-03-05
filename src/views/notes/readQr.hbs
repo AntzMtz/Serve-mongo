@@ -1,0 +1,21 @@
+<video id="preview"></video>
+
+<script src="/JS/instascan.min.js"></script>
+<script>
+    let scanner = new Instascan.Scanner({
+            video: document.getElementById('preview')
+        });
+
+     scanner.addListener('scan', function(content) {
+        alert('Contenido: ' + content);
+        window.open(content, "_blank");
+    });
+    Instascan.Camera.getCameras().then(cameras=>{
+        if(cameras.length>0){
+            scanner.start(cameras[0]);
+        }else{
+            console.log("no existen camaras")
+        }
+    });
+
+</script>
