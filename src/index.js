@@ -7,6 +7,9 @@ const session = require('express-session');
 const msySqlstore = require('express-mysql-session');
 const metoOver = require('method-override');
 const passport = require('passport');
+
+ // para matar todos los nodos: killall node
+
 // const { database } = require('./keys')
 const pasport = require('passport')
 
