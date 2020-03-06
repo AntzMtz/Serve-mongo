@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Nota = require('../models/Maestros')
+const Nota = require('../models/maestros')
 const { format } = require('timeago.js');
 const passport = require('passport');
 const {isLoggedIn, isNotLoggedIn}=require('../lib/aut');
 
 router.get('/Maestro',(req,res)=>{
     try {
-        console.log("body: "+req.body);
+        // console.log("body: "+req.body);
         res.render('Maestro/maestro')
         
     } catch (error) {

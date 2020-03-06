@@ -1,76 +1,80 @@
 const passtport = require('passport');
 const localSt = require('passport-local').Strategy;
 const usuar = require('../models/user');
-const Maestros = require('../models/Maestros');
+const maestro = require('../models/maestros');
 const help = require('../lib/helpers');
-
+var Usuar01;
 passtport.use('local.signin', new localSt({
     usernameField: 'usuario',
     // passwordField: 'password',
     passReqToCallback: true
-},async(req,usuario,password,done)=>{
+}, async (req, usuario, password, done) => {
     // console.log(req.body);
-    const Usuar01 = await usuar.findOne({idUser:usuario});
-    const Maes = await Maestros.find();
-    console.log("maes: " + Maes);
-    console.log("Use: "+Usuar01);
+    Usuar01 = await usuar.findOne({ idUser: usuario });
+
+    // console.log("Use: "+Usuar01);
     // console.log(Usuar01);
     if (!Usuar01) {
-        
-        
-        
-        
-        if(!Maes){
-            return done(null,false,{message:'Usuario no existe'})
-        }else{
+
+        Usuar01 = await maestro.findOne({ IDMaestro: usuario });
+        console.log("maes: " + Usuar01);
+        if (!Usuar01) {
+            return done(null, false, { message: 'Usuario no existe' })
+        } else {
             // const vali = await help.matchPassword(password,Usuar01.Password);
             // if(!vali){
             //     return done(null,false,{message:'contraseña no es valida'})
             // }else{
+            console.log(Usuar01.id);
 
-                return done(null,false,req.flash('success','Usuario valido'))
+            return done(null, Usuar01, req.flash('success', 'Usuario valido'))
             // }
         }
-        
-    }else{
+
+    } else {
         // console.log(password+":"+Usuar01.Password);
-        
-        const vali = await help.matchPassword(password,Usuar01.Password);
+
+        const vali = await help.matchPassword(password, Usuar01.Password);
 
         // console.log(vali);
-        if(!vali){
-            return done(null,false,{message:'contraseña no es valida'})
-        }else{
-            return done(null,Usuar01,req.flash('success','Usuario valido'))
+        if (!vali) {
+            return done(null, false, { message: 'contraseña no es valida' })
+        } else {
+            return done(null, Usuar01, req.flash('success', 'Usuario valido'))
         }
-        
+
     }
 }));
 
 
 
-passtport.serializeUser((Usuar01,done)=>{
-    // console.log(Usuar01.id);
+passtport.serializeUser((Usuar01, done) => {
+    console.log(Usuar01.id);
 
     // Usuar01.idUser =new ObjectId();
-    done(null,Usuar01.id);
+    done(null, Usuar01.id);
 
 });
 
-passtport.deserializeUser( async(req,id,done)=>{
+passtport.deserializeUser(async (req, id, done) => {
     // console.log("ID: "+id);
-    
+
     // usuar.findById(idUser,(err,user)=>{
     //     return done(err,user);
     // })
-    const Usuar01 = await usuar.findOne({_id:id});
+    var Usuar01 = await usuar.findOne({ _id: id });
     // console.log(Usuar01);
-    
-    if(!Usuar01){
-        return done(null, false);
-    }else{
+
+    if (!Usuar01) {
+        Usuar01 = await maestro.findOne({ _id: id });
+        if (!Usuar01) {
+            return done(null, false);
+        } else {
+            return done(null, Usuar01);
+        }
+    } else {
         return done(null, Usuar01);
     }
-    
+
 
 })

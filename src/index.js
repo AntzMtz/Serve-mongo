@@ -52,10 +52,6 @@ app.use((req,res, next)=>{
     next();
 });
 
-
-
-
-
 //rutas
 app.use(require('./routes/index'));
 app.use(require('./routes/users'));

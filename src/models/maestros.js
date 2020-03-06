@@ -11,10 +11,10 @@ var MaesSchema = new Schema({
     Centro: { type: String, required: true },
     ClaveCentro: { type: String, required:false },
     PassMaes:{type:String, required:true},
-    Estatus:{type:Boolean,required:true},
+    Estatus:{type:String,required:true},
     IDMaestro:{type:String,required:true},
     Puesto:{type:Array,required:true}
     
 });
 
-module.exports = mongoDb.model('Maestros', MaesSchema);
+module.exports = mongoDb.model('maestros', MaesSchema);

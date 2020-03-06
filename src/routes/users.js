@@ -11,6 +11,7 @@ router.get('/users/singin', isNotLoggedIn,(req, res) => {
 });
 
 router.post('/users/singin',isNotLoggedIn, passport.authenticate('local.signin', {
+    
     successRedirect: '/Maestro',
     failureRedirect: '/users/singin',
     failureFlash: true
