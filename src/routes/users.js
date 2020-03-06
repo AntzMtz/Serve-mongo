@@ -6,11 +6,12 @@ const passport = require('passport');
 const {isLoggedIn, isNotLoggedIn}=require('../lib/aut');
 
 router.get('/users/singin', isNotLoggedIn,(req, res) => {
+    
     res.render('./users/singin')
 });
 
 router.post('/users/singin',isNotLoggedIn, passport.authenticate('local.signin', {
-    successRedirect: '/notes',
+    successRedirect: '/Maestro',
     failureRedirect: '/users/singin',
     failureFlash: true
 }));
@@ -21,7 +22,7 @@ router.get('/users/signup', isNotLoggedIn,(req, res) => {
 
 router.post('/users/signup', isNotLoggedIn,async (req, res) => {
     // console.log(req.body);
-    const { usuario, Nombre, password, password1 } = req.body;
+    const { usuario, Nombre, password, password1, Tipo } = req.body;
     error_mesa = [];
     if (password != password1) {
         error_mesa.push({ text: 'La contraseña no coinside' })
@@ -54,11 +55,12 @@ router.post('/users/signup', isNotLoggedIn,async (req, res) => {
             usuario,
             Nombre,
             password,
-            password1
+            password1,
+            Tipo
         })
     } else {
         try {
-            const newUser = new Usuario({ idUser: usuario, Password: password, Nombre: Nombre });
+            const newUser = new Usuario({ idUser: usuario, Password: password, Nombre: Nombre, Tipo:Tipo});
             newUser.Password = await newUser.encrypPass(password);
             await newUser.save();
             req.flash('success', "Los datos son correctos");

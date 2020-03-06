@@ -59,6 +59,7 @@ app.use((req,res, next)=>{
 //rutas
 app.use(require('./routes/index'));
 app.use(require('./routes/users'));
+app.use(require('./routes/Maestro'))
 app.use(require('./routes/notes'));
 //Publicos
 

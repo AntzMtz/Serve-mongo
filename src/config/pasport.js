@@ -1,6 +1,7 @@
 const passtport = require('passport');
 const localSt = require('passport-local').Strategy;
 const usuar = require('../models/user');
+const Maestros = require('../models/Maestros');
 const help = require('../lib/helpers');
 
 passtport.use('local.signin', new localSt({
@@ -9,14 +10,33 @@ passtport.use('local.signin', new localSt({
     passReqToCallback: true
 },async(req,usuario,password,done)=>{
     // console.log(req.body);
-     const Usuar01 = await usuar.findOne({idUser:usuario});
+    const Usuar01 = await usuar.findOne({idUser:usuario});
+    const Maes = await Maestros.find();
+    console.log("maes: " + Maes);
+    console.log("Use: "+Usuar01);
     // console.log(Usuar01);
     if (!Usuar01) {
-        return done(null,false,{message:'Usuario no existe'})
+        
+        
+        
+        
+        if(!Maes){
+            return done(null,false,{message:'Usuario no existe'})
+        }else{
+            // const vali = await help.matchPassword(password,Usuar01.Password);
+            // if(!vali){
+            //     return done(null,false,{message:'contraseña no es valida'})
+            // }else{
+
+                return done(null,false,req.flash('success','Usuario valido'))
+            // }
+        }
+        
     }else{
         // console.log(password+":"+Usuar01.Password);
         
         const vali = await help.matchPassword(password,Usuar01.Password);
+
         // console.log(vali);
         if(!vali){
             return done(null,false,{message:'contraseña no es valida'})

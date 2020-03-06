@@ -6,7 +6,8 @@ var UserSchema = new Schema({
     idUser: { type: String, required: true },
     Password: { type: String, required: true },
     Nombre:{type:String, required:true},
-    dia: { type: Date, default: Date.now }
+    dia: { type: Date, default: Date.now },
+    Tipo:{type:String,required:true}
 });
 
 UserSchema.methods.encrypPass= async (password)=>{
