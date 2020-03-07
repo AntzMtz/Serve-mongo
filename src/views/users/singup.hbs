@@ -1,10 +1,4 @@
-{{json01}}
-{{#each materias}}
-    {{!-- {{#if  _id }} --}}
-        <p>{{ _id}}</p>
-        <p>{{entries}}</p>
-    {{!-- {{/if}}     --}}
-{{/each}}
+{{  json01}}
 <div id="Cuad" class="row">
     <div class="col-md-4 mx-auto">
         <div class="card text-center">
@@ -44,33 +38,19 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control">
+                        <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control"
+                            onchange=evento([{{json01}}])>
                             <option disabled selected>Selecciona una metria</option>
                             {{#each materias}}
-                            <option>
+                            <option value={{_id}}>
                                 <p>{{ _id}}</p>
                             </option>
                             {{/each}}
-                            {{!-- <option>Informatica</option>
-                            <option>Matematicas</option> --}}
                         </select>
 
                         <select id="Grado" value="" placeholder="Materia" name="Grado" class="form-control">
                             <option disabled selected>Grado</option>
-                            {{!-- {{#each materias}}
-                                {{#if }}
-                            {{/each}} --}}
-                            
-                            {{!-- <option>1</option>
-                            <option>2</option> --}}
                         </select>
-
-
-                    </div>
-
-                    <div class="form-group">
-
-
                     </div>
 
                     <div class="form-group">
@@ -90,14 +70,27 @@
     </div>
 </div>
 
-<script>    
-    function comenzar(){
-        const materia = document.getElementById('Materia');
-        materia.addEventListener('changed',evento,false);
-       
+<script>
+    const materia = document.getElementById('Materia');
+    const grad = document.getElementById('Grado');
+    function comenzar() {
+
+        //materia.addEventListener('change',evento([{{json01}}]),true);
+
     }
-    function evento(){
-        console.log("json01")
+    function evento(e) {
+        grad.innerHTML = "<option disabled selected>Grado</option>"
+        for (var i = 0; i < e.length; i++) {
+            if (materia.value == e[i]._id) {
+                var gra1 = e[i].entries;
+                for (var y = 0; y < gra1.length; y++) {
+                    grad.innerHTML += "<option value=" + gra1[y] + ">" + gra1[y] + "</option>"
+                }
+
+            }
+
+        }
+
     }
     window.addEventListener("load", comenzar, false);
 </script>
