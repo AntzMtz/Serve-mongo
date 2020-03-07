@@ -1,3 +1,10 @@
+{{json01}}
+{{#each materias}}
+    {{!-- {{#if  _id }} --}}
+        <p>{{ _id}}</p>
+        <p>{{entries}}</p>
+    {{!-- {{/if}}     --}}
+{{/each}}
 <div id="Cuad" class="row">
     <div class="col-md-4 mx-auto">
         <div class="card text-center">
@@ -12,24 +19,66 @@
 
                 <form action="/users/signup" method="POST">
                     <div class="form-group">
-                        <input type="text" name="usuario" value="{{usuario}}" placeholder="Usuario" class="form-control" autofocus>
+                        <input type="text" name="usuario" value="{{usuario}}" placeholder="Usuario" class="form-control"
+                            autofocus>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" name="Nombre" value="{{Nombre}}" placeholder="Nombre completo" class="form-control">
+                        <input type="text" name="Nombre" value="{{Nombre}}" placeholder="Nombre completo"
+                            class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="password" name="password" value="" placeholder="Password" class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="password" name="password1" value="" placeholder="Confirma tu Password" class="form-control">
+                        <input type="password" name="password1" value="" placeholder="Confirma tu Password"
+                            class="form-control">
                     </div>
-                     <div class="form-group">
-                            <select id="Tipo" name="Tipo" class="form-control">
-                                <option value="Administrador">Administrador</option>
-                                <option value="Docente">Docente</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <input type="text" name="Centro" value="" placeholder="Nombre del Centro Escolar"
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="ClaveCentro" value="" placeholder="Clave del Centro Escolar"
+                            class="form-control">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control">
+                            <option disabled selected>Selecciona una metria</option>
+                            {{#each materias}}
+                            <option>
+                                <p>{{ _id}}</p>
+                            </option>
+                            {{/each}}
+                            {{!-- <option>Informatica</option>
+                            <option>Matematicas</option> --}}
+                        </select>
+
+                        <select id="Grado" value="" placeholder="Materia" name="Grado" class="form-control">
+                            <option disabled selected>Grado</option>
+                            {{!-- {{#each materias}}
+                                {{#if }}
+                            {{/each}} --}}
+                            
+                            {{!-- <option>1</option>
+                            <option>2</option> --}}
+                        </select>
+
+
+                    </div>
+
+                    <div class="form-group">
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <select id="Tipo" name="Tipo" class="form-control">
+                            <option value="Administrador">Administrador</option>
+                            <option value="Docente">Docente</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success btn-block">
                             SingUp
@@ -40,3 +89,15 @@
         </div>
     </div>
 </div>
+
+<script>    
+    function comenzar(){
+        const materia = document.getElementById('Materia');
+        materia.addEventListener('changed',evento,false);
+       
+    }
+    function evento(){
+        console.log("json01")
+    }
+    window.addEventListener("load", comenzar, false);
+</script>

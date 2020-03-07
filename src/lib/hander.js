@@ -1,28 +1,42 @@
-const {format}= require('timeago.js');
+const { format } = require('timeago.js');
 
-const help={};
-help.time=(dia)=>{
+const help = {};
+help.time = (dia) => {
     return format(dia);
 };
-help.comparaAd =  (usuario) => {
-    if (usuario=="Administrador"){
-        return true;
-    }else{
-        return false;
+help.comparaAd = (usuario, idUser) => {
+    // console.log("usu:" + usuario + " id " + idUser);
+    var puente = 0;
+    for (var propiedad in usuario) {
+        // console.log(usuario[propiedad]);
+        if (usuario[propiedad] == "Administrador" || (usuario == null && idUser)) {
+            puente = 1;
+        }
     }
-    
-};
-help.comparaDoc =  (usuario,idUser) => {
-    console.log("usu:"+usuario + " id "+ idUser);
-    
-    if (usuario=="Docente" || (usuario==null && idUser)){
-        
+    if (puente == 0) {
+        return false;
+    } else {
         return true;
+    }
 
-    }else{
-        return false;
-    }
-    
 };
 
-module.exports=help;
+help.comparaDoc = (usuario, idUser) => {
+    // console.log("usu:" + usuario + " id " + idUser);
+    // console.log("usu:" + usuario + " id " + idUser);
+    var puente = 0;
+    for (var propiedad in usuario) {
+        // console.log(usuario[propiedad]);
+        if (usuario[propiedad] == "Docente" || (usuario == null && idUser)) {
+            puente = 1;
+        }
+    }
+    if (puente == 0) {
+        return false;
+    } else {
+        return true;
+    }
+
+};
+
+module.exports = help;
