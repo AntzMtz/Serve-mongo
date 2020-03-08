@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/user')
 const Mat1 = require('../models/Mat01')
+const Maestro = require('../models/maestros')
 const note = require('../models/Notes')
-
+const bcrypt = require('../lib/helpers');
 const passport = require('passport');
 
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
@@ -21,24 +22,20 @@ router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin'
 }));
 
 router.get('/users/signup', isNotLoggedIn, async (req, res) => {
-    // const materias = await materia.find({}).sort({ "Nombre": -1 , "Grado": -1});
-    // const materias = await Mat1.find({}).sort({ "Nombre": 1, "Grado": 1 });
+
     const json01=[]
     const materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
        
-    // console.log(materias[0]);
     for(var i=0;i<materias.length;i++){
         json01.push(JSON.stringify(materias[i]));
     }
 
-        // console.log(json01);
-        
     res.render('./users/singup',{materias,json01})
 });
 
 router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     // console.log(req.body);
-    const { usuario, Nombre, password, password1, Tipo } = req.body;
+    const { usuario, Nombre, password, password1,Centro,ClaveCentro,Texto,Grado, Tipo } = req.body;
     error_mesa = [];
     if (password != password1) {
         error_mesa.push({ text: 'La contraseña no coinside' })
@@ -72,12 +69,20 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
             Nombre,
             password,
             password1,
+            Centro,
+            ClaveCentro,
+            Texto,
+            Grado,
             Tipo
         })
     } else {
         try {
-            const newUser = new Usuario({ idUser: usuario, Password: password, Nombre: Nombre, Tipo: Tipo });
-            newUser.Password = await newUser.encrypPass(password);
+            const newUser = new Maestro({ Nombre: Nombre, Materia: JSON.parse(Texto), Centro: Centro, ClaveCentro: ClaveCentro,PassMaes:password,Estatus:'Activo',IDMaestro:usuario,Puesto: Tipo
+        });
+            newUser.PassMaes = await bcrypt.encypass(password);
+            
+            console.log(await bcrypt.encypass(password));
+            
             await newUser.save();
             req.flash('success', "Los datos son correctos");
             res.redirect('/users/singin');

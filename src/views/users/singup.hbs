@@ -51,8 +51,13 @@
                         <select id="Grado" value="" placeholder="Materia" name="Grado" class="form-control">
                             <option disabled selected>Grado</option>
                         </select>
+                        <a class="btn btn-success" id="btn01">add</a>
+                             
                     </div>
-
+                    <div class="input-group mb-3" id="Tabla">
+                        <input type="hidden" value="" id="Texto" name="Texto">
+                                        
+                    </div>
                     <div class="form-group">
                         <select id="Tipo" name="Tipo" class="form-control">
                             <option value="Administrador">Administrador</option>
@@ -73,10 +78,23 @@
 <script>
     const materia = document.getElementById('Materia');
     const grad = document.getElementById('Grado');
+    const boton = document.getElementById('btn01');
+    const tabla=document.getElementById('Tabla');
+    var datos=[];
     function comenzar() {
 
         //materia.addEventListener('change',evento([{{json01}}]),true);
+        boton.addEventListener('click', agregar, false);
+    }
+    function agregar() {
+        datos.push({ Materia: materia.value, Grado: grad.value})
 
+        for(var i = 0; i<datos.length;i++){
+            tabla.innerHTML='<input type="text" value="" id="Texto" name="Texto">'
+            console.log("datos: " + JSON.stringify(datos) )
+        } 
+        document.getElementById('Texto').value=JSON.stringify(datos);
+        
     }
     function evento(e) {
         grad.innerHTML = "<option disabled selected>Grado</option>"
