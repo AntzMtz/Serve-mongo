@@ -71,7 +71,7 @@
                         </button>
                     </div>
                     <div class="input-group mb-3" id="Tabla1">
-                        <input type="text" value="" id="Texto" name="Texto">
+                        <input type="hidden" value="" id="Texto" name="Texto" value="Hola" >
                     </div>
                 </form>
             </div>
@@ -84,139 +84,42 @@
     const grad = document.getElementById('Grado');
     const boton = document.getElementById('btn01');
     const tablaDiv = document.getElementById('Tabla');
+    document.getElementById('Texto').value=JSON.stringify({});;
     var datos = [];
     function comenzar() {
         document.getElementById("Tabla").innerHTML = "";
-        //tablaDiv.innerHTML += '<input type="text" value="" id="Texto" name="Texto" >'
-        //materia.addEventListener('change',evento([{{json01}}]),true);
         boton.addEventListener('click', agregar1, false);
     }
 
-    function tablaEner(){
-        //document.getElementById("Tabla").innerHTML = "";
-        //tabla.innerHTML += '<input type="text" value="" id="Texto" name="Texto" >'
-        var tabla1 = document.createElement("table");
-        var tblBody1 = document.createElement("tbody");
-
-        var hilera = document.createElement("tr");
-        var celda = document.createElement("td");
-        var textoCelda = document.createTextNode("Materia ");
-
-        celda.appendChild(textoCelda);
-        hilera.appendChild(celda);
-        tblBody1.appendChild(hilera);
-
-        celda = document.createElement("td");
-        textoCelda = document.createTextNode("Grado ");
-        celda.appendChild(textoCelda);
-        hilera.appendChild(celda);
-        tblBody1.appendChild(hilera);
-
-        celda = document.createElement("td");
-        butn = document.createElement("a")
-        butn.innerHTML = "";
-        butn.setAttribute('class', 'btn btn-danger btn-block');
-        //butn.addEventListener("click", eliminarPorName());
-        celda.appendChild(butn);
-        hilera.appendChild(celda);
-        tblBody1.appendChild(hilera);
-
-
-        for (var i = 0; i < datos.length; i++) {
-            hilera = document.createElement("tr");
-            celda = document.createElement("td");
-            textoCelda = document.createTextNode(datos[i].Materia);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
-            tblBody1.appendChild(hilera);
-
-            celda = document.createElement("td");
-            textoCelda = document.createTextNode(datos[i].Grado);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
-            tblBody1.appendChild(hilera);
-
-
-            celda = document.createElement("td");
-            butn = document.createElement("a")
-            butn.setAttribute("id", datos[i].Materia);
-            butn.innerHTML = datos[i].Materia;
-            butn.setAttribute('class', 'btn btn-danger btn-block');
-            butn.addEventListener("click", eliminarPorName, false);
-            celda.appendChild(butn);
-            hilera.appendChild(celda);
-            tblBody1.appendChild(hilera);
-
-
-            //console.log("datos: " + JSON.stringify(datos))
-            document.getElementById('Texto').value = JSON.stringify(datos);
-
-            tabla1.appendChild(tblBody1);
-            tablaDiv.appendChild(tabla1);
-            tabla1.setAttribute('class', 'table table-ligth');
-        }
-    }
-
-    function agregar() {
-        //var tablaDiv1 = document.getElementById('Tabla');
-        document.getElementById("Tabla").innerHTML = "";
-        //tablaDiv1.innerHTML += '<input type="text" value="" id="Texto" name="Texto" >'
-
-        datos.push({ Materia: materia.value, Grado: grad.value })
-        tablaEner();
-        
-    }
-    function evento(e) {
-        grad.innerHTML = "<option disabled selected>Grado</option>"
-        for (var i = 0; i < e.length; i++) {
-            if (materia.value == e[i]._id) {
-                var gra1 = e[i].entries;
-                for (var y = 0; y < gra1.length; y++) {
-                    grad.innerHTML += "<option value=" + gra1[y] + ">" + gra1[y] + "</option>"
-                }
-
-            }
-
-        }
-
-    }
-
-    function eliminarPorName(e) {
-        
-        console.log(e.target.id);
-        var arrayDeCadenas = e.target.id.split(",");
-        var elimi=arrayDeCadenas[1]
-        console.log("vary:"+arrayDeCadenas[0])
-        datos.splice(elimi);
-        tablaEner();
-
-
-        //console.log(datos);
-
-        //datos.hobbies.forEach(function (currentValue, index, arr) {
-        //    if (datos[index].Materia == name) {
-        //        datos.hobbies.splice(index, index);
-        //    }
-        //})
-    }
-    function agregar1() {
-        datos.push({ Materia: materia.value, Grado: grad.value })
+    function tablaEner() {
         document.getElementById('Tabla').innerHTML = "";
+        document.getElementById('Texto').value = JSON.stringify(datos);
+        
         var body = document.getElementById('Tabla');
         var tabla = document.createElement("table");
         var tblBody = document.createElement("tbody");
 
-        var fila = document.createElement("tr");
+var fila = document.createElement("tr");
+        for(var y=0;y<2;y++){
+            
+            var celda = document.createElement("td");
+            if(y==0){
+                var butn = document.createTextNode("Materia ");
+            }else{
+                butn = document.createTextNode("Grado ");
+            }    
+            celda.appendChild(butn);
+            fila.appendChild(celda);
+        }
 
-        var celda = document.createElement("td");
-        var butn = document.createTextNode("Materia ");
-        celda.appendChild(butn);
-        fila.appendChild(celda);
+        
+        
+        
 
-        celda = document.createElement("td");
-        butn = document.createTextNode("Grado ");
-        celda.appendChild(butn);
-        fila.appendChild(celda);
+        //celda = document.createElement("td");
+        //butn = document.createTextNode("Grado ");
+        //celda.appendChild(butn);
+        //fila.appendChild(celda);
 
         tblBody.appendChild(fila);
 
@@ -233,34 +136,49 @@
                 } else {
                     celda = document.createElement("td");
                     butn = document.createElement('a');
-                    
-                    var ima=document.createElement('i');
-                    //butn.innerHTML = datos[i].Materia;
-                    //butn.setAttribute('class', 'btn btn-danger btn-block');
+
+                    var ima = document.createElement('i');
                     ima.setAttribute("id", datos[i].Materia + "," + i);
                     ima.setAttribute('class', 'fas fa-trash');
                     butn.appendChild(ima);
-                    
-
-                    
                     butn.addEventListener("click", eliminarPorName, false);
                 }
                 celda.appendChild(butn);
                 fila.appendChild(celda);
             }
-            // agregamos la hilera al final de la tabla (al final del elemento tblbody)
             tblBody.appendChild(fila);
         }
-        // posicionamos el <tbody> debajo del elemento <table>
         tabla.appendChild(tblBody);
-        // appends <table> into <body>
         body.appendChild(tabla);
-        // modifica el atributo "border" de la tabla y lo fija a "2";
-        //tabla.setAttribute("border", 2);
-        //tabla.setAttribute("id", "tabla");
         tabla.setAttribute('class', 'table table-dark');
-        //var result = document.getElementById("resultado");
-        //result.appendChild(tabla);
+    }
+
+    
+    function evento(e) {
+        grad.innerHTML = "<option disabled selected>Grado</option>"
+        for (var i = 0; i < e.length; i++) {
+            if (materia.value == e[i]._id) {
+                var gra1 = e[i].entries;
+                for (var y = 0; y < gra1.length; y++) {
+                    grad.innerHTML += "<option value=" + gra1[y] + ">" + gra1[y] + "</option>"
+                }
+
+            }
+
+        }
+
+    }
+
+    function eliminarPorName(e) {
+        var arrayDeCadenas = e.target.id.split(",");
+        var elimi=arrayDeCadenas[1]
+        let remo1=datos.splice(elimi,1);
+        tablaEner();
+
+    }
+    function agregar1() {
+        datos.push({ Materia: materia.value, Grado: grad.value })
+        tablaEner();
     }
     window.addEventListener("load", comenzar, false);
 </script>

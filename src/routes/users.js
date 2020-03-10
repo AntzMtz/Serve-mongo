@@ -6,8 +6,8 @@ const Maestro = require('../models/maestros')
 const note = require('../models/Notes')
 const bcrypt = require('../lib/helpers');
 const passport = require('passport');
-
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
+
 
 router.get('/users/singin', isNotLoggedIn, (req, res) => {
 
@@ -21,11 +21,12 @@ router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin'
     failureFlash: true
 }));
 
-router.get('/users/signup', isNotLoggedIn, async (req, res) => {
 
+
+router.get('/users/signup', isNotLoggedIn, async (req, res) => {
     const json01=[]
     const materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
-       
+
     for(var i=0;i<materias.length;i++){
         json01.push(JSON.stringify(materias[i]));
     }
@@ -34,7 +35,9 @@ router.get('/users/signup', isNotLoggedIn, async (req, res) => {
 });
 
 router.post('/users/signup', isNotLoggedIn, async (req, res) => {
-    // console.log(req.body);
+    console.log("Quien es: ");
+    
+    console.log(req);
     const { usuario, Nombre, password, password1,Centro,ClaveCentro,Texto,Grado, Tipo } = req.body;
     error_mesa = [];
     if (password != password1) {
@@ -96,15 +99,26 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
                     usuario,
                     Nombre,
                     password,
-                    password1
+                    password1,
+                    Centro,
+                    ClaveCentro,
+                    Texto,
+                    Grado,
+                    Tipo
                 })
             } else {
-                req.flash('error_ms', "El error es: " + error.message);
+                req.flash('error_ms', "El error es: " + error);
                 res.redirect('/users/singin', {
+                    errors,
                     usuario,
                     Nombre,
                     password,
-                    password1
+                    password1,
+                    Centro,
+                    ClaveCentro,
+                    Texto,
+                    Grado,
+                    Tipo
                 });
             }
 
