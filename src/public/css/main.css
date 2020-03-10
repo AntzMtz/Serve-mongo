@@ -20,3 +20,7 @@ body {
     padding: 13px;
     /* margin-top: 3px auto; */
 }
+#tabla{
+    width: 100%;
+    background-color: rgb(158, 28, 28);
+}
