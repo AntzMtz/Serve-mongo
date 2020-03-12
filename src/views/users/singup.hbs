@@ -22,18 +22,18 @@
                             class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="password" name="password" value="" placeholder="Password" class="form-control">
+                        <input type="password" name="password" value="{{password}}" placeholder="Password" class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="password" name="password1" value="" placeholder="Confirma tu Password"
+                        <input type="password" name="password1" value="{{password1}}" placeholder="Confirma tu Password"
                             class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="Centro" value="" placeholder="Nombre del Centro Escolar"
+                        <input type="text" name="Centro" value="{{Centro}}" placeholder="Nombre del Centro Escolar"
                             class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="ClaveCentro" value="" placeholder="Clave del Centro Escolar"
+                        <input type="text" name="ClaveCentro" value="{{ClaveCentro}}" placeholder="Clave del Centro Escolar"
                             class="form-control">
                     </div>
 
@@ -60,7 +60,8 @@
 
                     </div>
                     <div class="form-group">
-                        <select id="Tipo" name="Tipo" class="form-control">
+                        <select id="Tipo" name="Tipo" class="form-control" >
+                            <option value="">Elige una opción</option>
                             <option value="Administrador">Administrador</option>
                             <option value="Docente">Docente</option>
                         </select>
@@ -84,6 +85,9 @@
     const grad = document.getElementById('Grado');
     const boton = document.getElementById('btn01');
     const tablaDiv = document.getElementById('Tabla');
+    document.getElementById("Tipo").value = "{{Tipo}}";
+    
+
     document.getElementById('Texto').value=JSON.stringify({});;
     var datos = [];
     function comenzar() {

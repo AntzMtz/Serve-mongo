@@ -24,8 +24,8 @@ router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin'
 
 
 router.get('/users/signup', isNotLoggedIn, async (req, res) => {
-    const json01=[]
-    const materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
+    json01=[]
+    materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
 
     for(var i=0;i<materias.length;i++){
         json01.push(JSON.stringify(materias[i]));
@@ -66,6 +66,15 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     if (error_mesa.length > 0) {
         errors.push({ text: errores_dis });
         req.flash('error_ms', errores_dis);
+       
+        // const json01=[]
+        // const materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
+    
+        // for(var i=0;i<materias.length;i++){
+        //     json01.push(JSON.stringify(materias[i]));
+        // }
+
+
         res.render('users/singup', {
             errors,
             usuario,
@@ -76,7 +85,9 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
             ClaveCentro,
             Texto,
             Grado,
-            Tipo
+            Tipo,
+            materias,
+            json01
         })
     } else {
         try {
