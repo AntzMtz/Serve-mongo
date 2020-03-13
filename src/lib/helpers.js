@@ -8,13 +8,11 @@ helpers.encypass = async (password) => {
 };
 
 helpers.matchPassword = async (password, savePassword) => {
-    // try {
-        // console.log("pass    :" + password);
-        // console.log("passSave:" + savePassword);
+    try {
         return await bcry.compare(password, savePassword);
-    // } catch (e) {
-    //     console.log(e);
-    // }
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 module.exports = helpers;

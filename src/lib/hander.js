@@ -5,7 +5,6 @@ help.time = (dia) => {
     return format(dia);
 };
 help.comparaAd = (usuario, idUser) => {
-    console.log("usu:" + usuario + " id " + idUser);
     var puente = 0;
     for (var propiedad in usuario) {
         console.log(usuario[propiedad]);
@@ -22,14 +21,8 @@ help.comparaAd = (usuario, idUser) => {
 };
 
 help.comparaDoc = (usuario, idUser) => {
-    console.log("usu:" + usuario + " id " + idUser);
-    // console.log("usu:" + usuario + " id " + idUser);
     var puente = 0;
-
     for (var propiedad in usuario) {
-        console.log(usuario[propiedad]);
-        console.log(propiedad);
-         
         if (usuario[propiedad] == "Docente" || (usuario == null && idUser)) {
             puente = 1;
         }
