@@ -10,12 +10,10 @@ const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
 
 router.get('/users/singin', isNotLoggedIn, (req, res) => {
-
     res.render('./users/singin')
 });
 
 router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin', {
-
     successRedirect: '/Maestro',
     failureRedirect: '/users/singin',
     failureFlash: true

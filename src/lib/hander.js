@@ -37,4 +37,20 @@ help.comparaDoc = (usuario, idUser) => {
 
 };
 
+help.comparaPuesto = (puesto) => {
+    var Puest01 = [];
+    var AdminTXT = "En Este Modulo Podras Dar de Alta, Baja y Cambios de los Docentes Asi Como Podras Dar CheckIn de los Alumnos y Docentes";
+    var DocenTXT = "En Este Modulo Podras Dar de Alta, Baja y Cambios de las actividades Asi Como Podras Dar CheckIn de los Alumnos";
+    Puest01.push({PuestoMd:"Docente",TextMd:DocenTXT});
+    
+    for (var propiedad in puesto) {
+        if (puesto[propiedad] == "Administrador") {
+            Puest01 = [];
+            Puest01.push({PuestoMd:puesto[propiedad],TextMd:AdminTXT});
+        }
+    }
+    console.log(Puest01);
+    return Puest01;
+};
+
 module.exports = help;

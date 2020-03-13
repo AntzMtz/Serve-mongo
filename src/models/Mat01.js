@@ -1,8 +1,5 @@
 const mongoDb = require('mongoose');
 const { Schema } = mongoDb;
-// console.log("esquema");
-
-// console.log(Schema);
 
 
 var MateriaSh = new Schema({

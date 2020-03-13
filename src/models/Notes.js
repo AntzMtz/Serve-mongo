@@ -1,9 +1,5 @@
 const mongoDb = require('mongoose');
 const { Schema } = mongoDb;
-// console.log("esquema");
-
-// console.log(Schema);
-
 
 var NoteSchema = new Schema({
     titulo: { type: String, required: true },

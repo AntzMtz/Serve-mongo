@@ -16,19 +16,4 @@ UserSchema.methods.encrypPass= async (password)=>{
     return hash;
 };
 
-// UserSchema.methods.desCript= async (password, savePassword) => {
-//     console.log("pass    :" + password);
-//     console.log("passSave:" + savePassword);
-//     return await bcry.compare(password, savePassword);
-// };
-
-// UserSchema.methods.desCript= async function (password, savePassword){
-//     console.log("pass    :" + password);
-//     console.log("passSave:" + savePassword);
-//     return await bcry.compare(password, savePassword);
-//     // return await bcrypt.compare(password,this.Password)
-// };
-
-
-
 module.exports = mongoDb.model('usuarios01', UserSchema);

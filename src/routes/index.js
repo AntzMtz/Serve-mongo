@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
 const Mat1 = require('../models/Mat01')
-
 const {isLoggedIn, isNotLoggedIn}=require('../lib/aut');
+
 router.get('/', isNotLoggedIn,(req, res) => {
     res.render('index');
 });
