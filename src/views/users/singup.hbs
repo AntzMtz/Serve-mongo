@@ -1,4 +1,3 @@
-{{  json01}}
 <div id="Cuad" class="row">
     <div class="col-md-4 mx-auto">
         <div class="card text-center">
@@ -16,7 +15,6 @@
                         <input type="text" name="usuario" value="{{usuario}}" placeholder="Usuario" class="form-control"
                             autofocus>
                     </div>
-
                     <div class="form-group">
                         <input type="text" name="Nombre" value="{{Nombre}}" placeholder="Nombre completo"
                             class="form-control">
@@ -37,7 +35,6 @@
                         <input type="text" name="ClaveCentro" value="{{ClaveCentro}}"
                             placeholder="Clave del Centro Escolar" class="form-control">
                     </div>
-
                     <div class="input-group mb-3">
                         <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control"
                             onchange=evento([{{json01}}])>
@@ -48,17 +45,12 @@
                             </option>
                             {{/each}}
                         </select>
-
                         <select id="Grado" value="" placeholder="Materia" name="Grado" class="form-control">
                             <option disabled selected>Grado</option>
                         </select>
                         <a class="btn btn-success" id="btn01">add</a>
-
                     </div>
                     <div class="input-group mb-3" id="Tabla">
-
-                        {{!-- <input type="hidden" value="" id="Texto" name="Texto"> --}}
-
                     </div>
                     <div class="form-group">
                         <select id="Tipo" name="Tipo" class="form-control">
@@ -102,10 +94,8 @@
         var body = document.getElementById('Tabla');
         var tabla = document.createElement("table");
         var tblBody = document.createElement("tbody");
-
         var fila = document.createElement("tr");
         for (var y = 0; y < 2; y++) {
-
             var celda = document.createElement("td");
             if (y == 0) {
                 var butn = document.createTextNode("Materia ");
@@ -115,9 +105,7 @@
             celda.appendChild(butn);
             fila.appendChild(celda);
         }
-
         tblBody.appendChild(fila);
-
         // Creamos las celdas
         for (var i = 0; i < datos.length; i++) {
             fila = document.createElement("tr");
@@ -157,7 +145,6 @@
                 }
             }
         }
-
     }
 
     function eliminarPorName(e) {

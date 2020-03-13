@@ -1,6 +1,5 @@
 <script src="/JS/jquery.min.js"></script>
 <script src="/JS/instascan.min.js"></script>
- 
  <h1>Lector de QR</h1>
     <div>
         <video id="preview" width="300" height="300"></video>
@@ -8,25 +7,12 @@
     
     <input type="text" id="texto">
     <script type="text/javascript">
-    
-        // var encrypted = CryptoJS.AES.encrypt("AntzMtzRz", "");
-        
         let scanner = new Instascan.Scanner({
             video: document.getElementById('preview')
         });
         scanner.addListener('scan', function(content) {
-            //var encrypted=content;
-            //var deEncrBoat= atob(encrypted);
-            //var decrypted = CryptoJS.AES.decrypt(deEncrBoat, "");
-            //var derr=decrypted.toString(CryptoJS.enc.Utf8);
-            
-            //console.log("conent: "+content);
-            //console.log("Boat: "+deEncrBoat);
-            //console.log("Desec: "+decrypted);
-            
             console.log("Nombre: "+content);
             document.getElementById("texto").value=content;
-
         });
         Instascan.Camera.getCameras().then(function(cameras) {
             if (cameras.length == 1) {
@@ -34,7 +20,6 @@
             } else if (cameras.length > 1){
                 scanner.mirror = false;
                 scanner.start(cameras[1]);
-                
             }
             else{
                 console.error('No cameras found.');

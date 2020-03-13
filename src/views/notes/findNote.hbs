@@ -11,23 +11,16 @@
                 <form action="/notes/editNote/{{_id}}?_method=DELETE" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" class="btn btn-danger btn-block btn-sm">Delete</button>
-                    {{!-- <a href="#" class="btn btn-danger btn-block btn-sm">delete</a> --}}
                 </form>
-
-
             </div>
         </div>
     </div>
     {{else}}
-
-
     <div id="Cuad" class="card mx-auto">
         <div class="card body">
             <p class="lead"> No tienes ninguna nota</p>
             <a href="/notes/add" class="btn btn-success btn-block">Add</a>
         </div>
-
     </div>
-
     {{/each}}
 </div>

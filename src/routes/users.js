@@ -31,10 +31,6 @@ router.get('/users/signup', isNotLoggedIn, async (req, res) => {
 router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     const { usuario, Nombre, password, password1, Centro, ClaveCentro, Texto, Grado, Tipo } = req.body;
     error_mesa = [];
-    console.log("Tipo");
-    console.log(Tipo);
-
-
     if (password != password1) {
         error_mesa.push({ text: 'La contraseña no coinside' })
     }
@@ -59,10 +55,6 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     if (Tipo.length < 1) {
         error_mesa.push({ text: 'Es necesario introducir un Rol ' })
     }
-
-
-
-
     var errores_dis = "";
     error_mesa.forEach(function (valor, indice, array) {
         if (error_mesa.length <= indice + 1) {
@@ -70,22 +62,12 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
         } else {
             errores_dis += valor.text + " , ";
         }
-        // console.log("En el índice " + indice + " hay este valor: " + valor.text);
     });
 
     const errors = [];
     if (error_mesa.length > 0) {
         errors.push({ text: errores_dis });
         req.flash('error_ms', errores_dis);
-
-        // const json01=[]
-        // const materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
-
-        // for(var i=0;i<materias.length;i++){
-        //     json01.push(JSON.stringify(materias[i]));
-        // }
-
-
         res.render('users/singup', {
             errors,
             usuario,
@@ -106,9 +88,7 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
                 Nombre: Nombre, Materia: JSON.parse(Texto), Centro: Centro, ClaveCentro: ClaveCentro, PassMaes: password, Estatus: 'Activo', IDMaestro: usuario, Puesto: Tipo
             });
             newUser.PassMaes = await bcrypt.encypass(password);
-
             console.log(await bcrypt.encypass(password));
-
             await newUser.save();
             req.flash('success', "Los datos son correctos");
             res.redirect('/users/singin');
@@ -148,11 +128,8 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
                     json01
                 });
             }
-
         }
-
     }
-
-
 });
+
 module.exports = router;
