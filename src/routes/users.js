@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Usuario = require('../models/user')
 const Mat1 = require('../models/Mat01')
 const Maestro = require('../models/maestros')
-const note = require('../models/Notes')
 const bcrypt = require('../lib/helpers');
 const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
@@ -24,18 +22,13 @@ router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin'
 router.get('/users/signup', isNotLoggedIn, async (req, res) => {
     json01=[]
     materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
-
     for(var i=0;i<materias.length;i++){
         json01.push(JSON.stringify(materias[i]));
     }
-
     res.render('./users/singup',{materias,json01})
 });
 
 router.post('/users/signup', isNotLoggedIn, async (req, res) => {
-    console.log("Quien es: ");
-    
-    console.log(req);
     const { usuario, Nombre, password, password1,Centro,ClaveCentro,Texto,Grado, Tipo } = req.body;
     error_mesa = [];
     if (password != password1) {
@@ -50,6 +43,19 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     if (usuario.length < 1) {
         error_mesa.push({ text: 'Es necesario introducir tu usuario' })
     }
+    if(Centro.length<1){
+        error_mesa.push({ text: 'Es necesario introducir El Nombre de la Escuela' })
+    }
+    if(ClaveCentro.length<1){
+        error_mesa.push({ text: 'Es necesario introducir la Clave de la Escuela' })
+    }
+    if(Texto.length<1 || Texto == "{}"){
+        error_mesa.push({ text: 'Es necesario introducir almenos una materia ' })
+    }
+
+
+
+
     var errores_dis = "";
     error_mesa.forEach(function (valor, indice, array) {
         if (error_mesa.length <= indice + 1) {
