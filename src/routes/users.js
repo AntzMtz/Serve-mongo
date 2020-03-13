@@ -20,17 +20,21 @@ router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin'
 
 
 router.get('/users/signup', isNotLoggedIn, async (req, res) => {
-    json01=[]
-    materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
-    for(var i=0;i<materias.length;i++){
+    json01 = []
+    materias = await Mat1.aggregate([{ $group: { _id: "$Nombre", entries: { $push: "$Grado" } } }])
+    for (var i = 0; i < materias.length; i++) {
         json01.push(JSON.stringify(materias[i]));
     }
-    res.render('./users/singup',{materias,json01})
+    res.render('./users/singup', { materias, json01 })
 });
 
 router.post('/users/signup', isNotLoggedIn, async (req, res) => {
-    const { usuario, Nombre, password, password1,Centro,ClaveCentro,Texto,Grado, Tipo } = req.body;
+    const { usuario, Nombre, password, password1, Centro, ClaveCentro, Texto, Grado, Tipo } = req.body;
     error_mesa = [];
+    console.log("Tipo");
+    console.log(Tipo);
+
+
     if (password != password1) {
         error_mesa.push({ text: 'La contraseña no coinside' })
     }
@@ -43,14 +47,17 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     if (usuario.length < 1) {
         error_mesa.push({ text: 'Es necesario introducir tu usuario' })
     }
-    if(Centro.length<1){
+    if (Centro.length < 1) {
         error_mesa.push({ text: 'Es necesario introducir El Nombre de la Escuela' })
     }
-    if(ClaveCentro.length<1){
+    if (ClaveCentro.length < 1) {
         error_mesa.push({ text: 'Es necesario introducir la Clave de la Escuela' })
     }
-    if(Texto.length<1 || Texto == "{}"){
+    if (Texto.length < 1 || Texto == "{}" || Texto == "[]") {
         error_mesa.push({ text: 'Es necesario introducir almenos una materia ' })
+    }
+    if (Tipo.length < 1) {
+        error_mesa.push({ text: 'Es necesario introducir un Rol ' })
     }
 
 
@@ -70,10 +77,10 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
     if (error_mesa.length > 0) {
         errors.push({ text: errores_dis });
         req.flash('error_ms', errores_dis);
-       
+
         // const json01=[]
         // const materias = await Mat1.aggregate([{$group: {_id: "$Nombre",entries: { $push: "$Grado" }}}])
-    
+
         // for(var i=0;i<materias.length;i++){
         //     json01.push(JSON.stringify(materias[i]));
         // }
@@ -95,12 +102,13 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
         })
     } else {
         try {
-            const newUser = new Maestro({ Nombre: Nombre, Materia: JSON.parse(Texto), Centro: Centro, ClaveCentro: ClaveCentro,PassMaes:password,Estatus:'Activo',IDMaestro:usuario,Puesto: Tipo
-        });
+            const newUser = new Maestro({
+                Nombre: Nombre, Materia: JSON.parse(Texto), Centro: Centro, ClaveCentro: ClaveCentro, PassMaes: password, Estatus: 'Activo', IDMaestro: usuario, Puesto: Tipo
+            });
             newUser.PassMaes = await bcrypt.encypass(password);
-            
+
             console.log(await bcrypt.encypass(password));
-            
+
             await newUser.save();
             req.flash('success', "Los datos son correctos");
             res.redirect('/users/singin');
@@ -119,7 +127,9 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
                     ClaveCentro,
                     Texto,
                     Grado,
-                    Tipo
+                    Tipo,
+                    materias,
+                    json01
                 })
             } else {
                 req.flash('error_ms', "El error es: " + error);
@@ -133,7 +143,9 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
                     ClaveCentro,
                     Texto,
                     Grado,
-                    Tipo
+                    Tipo,
+                    materias,
+                    json01
                 });
             }
 
