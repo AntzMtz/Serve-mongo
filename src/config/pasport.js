@@ -6,43 +6,21 @@ const help = require('../lib/helpers');
 var Usuar01;
 passtport.use('local.signin', new localSt({
     usernameField: 'usuario',
-    // passwordField: 'password',
     passReqToCallback: true
 }, async (req, usuario, password, done) => {
-    // console.log(req.body);
-    Usuar01 = await usuar.findOne({ idUser: usuario });
-
-    // console.log("Use: "+Usuar01);
-    // console.log(Usuar01);
+    Usuar01 = await maestro.findOne({ IDMaestro: usuario });
+    console.log("maes: " + Usuar01);
     if (!Usuar01) {
-
-        Usuar01 = await maestro.findOne({ IDMaestro: usuario });
-        console.log("maes: " + Usuar01);
-        if (!Usuar01) {
-            return done(null, false, { message: 'Usuario no existe' })
-        } else {
-            // const vali = await help.matchPassword(password,Usuar01.Password);
-            // if(!vali){
-            //     return done(null,false,{message:'contraseña no es valida'})
-            // }else{
-            console.log(Usuar01.id);
-
-            return done(null, Usuar01, req.flash('success', 'Usuario valido'))
-            // }
-        }
-
+        return done(null, false, { message: 'Usuario no existe' })
     } else {
-        // console.log(password+":"+Usuar01.Password);
-
-        const vali = await help.matchPassword(password, Usuar01.Password);
-
-        // console.log(vali);
+        const vali = await help.matchPassword(password, Usuar01.PassMaes);
         if (!vali) {
             return done(null, false, { message: 'contraseña no es valida' })
         } else {
+            console.log(Usuar01.id);
+
             return done(null, Usuar01, req.flash('success', 'Usuario valido'))
         }
-
     }
 }));
 
