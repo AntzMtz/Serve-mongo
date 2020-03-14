@@ -88,7 +88,6 @@ router.post('/users/signup', isNotLoggedIn, async (req, res) => {
                 Nombre: Nombre, Materia: JSON.parse(Texto), Centro: Centro, ClaveCentro: ClaveCentro, PassMaes: password, Estatus: 'Activo', IDMaestro: usuario, Puesto: Tipo
             });
             newUser.PassMaes = await bcrypt.encypass(password);
-            console.log(await bcrypt.encypass(password));
             await newUser.save();
             req.flash('success', "Los datos son correctos");
             res.redirect('/users/singin');
