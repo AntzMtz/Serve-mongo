@@ -8,9 +8,12 @@ router.get('/Mestro/NewClass', isLoggedIn, (req, res) => {
     res.render('Maestro/newClass')
 });
 
+router.get('/Mestro/NewWorkHome', (req, res) => {
+    res.render('Maestro/newWorkHome')
+});
+
 router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
-    console.log("user");
-    console.log(req.body);
+
     const { nombre, grado } = req.body;
     const { ClaveCentro } = req.user;
 
