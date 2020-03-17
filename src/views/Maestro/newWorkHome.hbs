@@ -1,11 +1,71 @@
 <link rel="stylesheet" href="/css/calendar.css">
 <!--https://github.com/codemundo/calendario-momentjs-javascript/blob/master/js/calendar.js-->
-<div  class="container p-4">
+<div class="container p-4">
     <div class="row">
         <div class="col-md-4 mx-auto">
             <div class="root">
                 <div class="calendar" id="calendar">
-                    <div class="calendar__header">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js"></script>
+
+
+<script>
+    class Calendar {
+        constructor(id) {
+            this.cells1 = [];
+            this.mesActual = moment();
+            this.elCalendar = document.getElementById(id);
+            this.mostrarPlantilla();
+
+
+            this.elGridBody = this.elCalendar.querySelector('.grid__body');
+            this.elNombredelMes = this.elCalendar.querySelector('.month-name')
+            this.muestraDias();
+
+
+
+        }
+        mostrarPlantilla() {
+            this.elCalendar.innerHTML = this.obtenerCeldas();
+            this.addEventListenerToControls();
+
+        }
+
+        addEventListenerToControls() {
+            let elControls = this.elCalendar.querySelectorAll('.control');
+            elControls.forEach(elControl => {
+                elControl.addEventListener('click', e => {
+                    let elTa = e.target;
+                    let next = false;
+                    if (elTa.classList.contains('control--next')) {
+                        next=true;
+
+                    } 
+                    
+                    this.changeMonths(next);
+                    this.muestraDias();
+                })
+            })
+
+
+        }
+
+        changeMonths(next = true) {
+            if (next) {
+                this.mesActual.add(1, 'months')
+            } else {
+                this.mesActual.subtract(1, 'months')
+            }
+        }
+        obtenerCeldas() {
+            let celdas = `
+            <div class="calendar__header">
                         <button type="button" class="control control--prev">&lt;</button>
                         <samp class="month-name">Febrero 2020</samp>
                         <button type="button" class="control control--next">&gt;</button>
@@ -22,53 +82,92 @@
                                 <span class="grid__cell grid__cell--gh">Dom</span>
                             </div>
                             <div class="grid__body">
-                                <span class="grid__cell grid__cell--gd">1</span>
-                                <span class="grid__cell grid__cell--gd">2</span>
-                                <span class="grid__cell grid__cell--gd">3</span>
-                                <span class="grid__cell grid__cell--gd">4</span>
-                                <span class="grid__cell grid__cell--gd">5</span>
-                                <span class="grid__cell grid__cell--gd">6</span>
-                                <span class="grid__cell grid__cell--gd">7</span>
-                                <span class="grid__cell grid__cell--gd">8</span>
-                                <span class="grid__cell grid__cell--gd">9</span>
-                                <span class="grid__cell grid__cell--gd">10</span>
-                                <span class="grid__cell grid__cell--gd">11</span>
-                                <span class="grid__cell grid__cell--gd">12</span>
-                                <span class="grid__cell grid__cell--gd">13</span>
-                                <span class="grid__cell grid__cell--gd">14</span>
-                                <span class="grid__cell grid__cell--gd">15</span>
-                                <span class="grid__cell grid__cell--gd">16</span>
-                                <span class="grid__cell grid__cell--gd">17</span>
-                                <span class="grid__cell grid__cell--gd">18</span>
-                                <span class="grid__cell grid__cell--gd">19</span>
-                                <span class="grid__cell grid__cell--gd">20</span>
-                                <span class="grid__cell grid__cell--gd">21</span>
-                                <span class="grid__cell grid__cell--gd">22</span>
-                                <span class="grid__cell grid__cell--gd">23</span>
-                                <span class="grid__cell grid__cell--gd">24</span>
-                                <span class="grid__cell grid__cell--gd">25</span>
-                                <span class="grid__cell grid__cell--gd">26</span>
-                                <span class="grid__cell grid__cell--gd">27</span>
-                                <span class="grid__cell grid__cell--gd">28</span>
-                                <span class="grid__cell grid__cell--gd">29</span>
-                                <span class="grid__cell grid__cell--gd">30</span>
-                                <span class="grid__cell grid__cell--gd">31</span>
-                                <span class="grid__cell grid__cell--gd">32</span>
-                                <span class="grid__cell grid__cell--gd">33</span>
-                                <span class="grid__cell grid__cell--gd">34</span>
-                                <span class="grid__cell grid__cell--gd">35</span>
-
+                                
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js"></script>
+        `;
+            return celdas;
+        }
+
+        muestraDias() {
+
+            this.cells1 = this.generaFechas(this.mesActual);
+            if (this.cells1 == null) {
+                console.error('No se pueden generar las fechas');
+                return;
+            }
+            this.elGridBody.innerHTML = '';
+            let tmplateCell = '';
+            let disableClass = '';
+
+            for (let i = 0; i < this.cells1.length; i++) {
+                //if(this){
+
+                //}
+                tmplateCell += `
+                <span class="grid__cell grid__cell--gd ">
+                    ${this.cells1[i].date.date()}
+                </span>
+                `;
+                //<span class="grid__cell grid__cell--gd grid__cell--disabled" ></span>
+            }
+            this.elNombredelMes.innerHTML = this.mesActual.format('MMM YYYY');
+            this.elGridBody.innerHTML = tmplateCell;
+
+        }
+
+
+        generaFechas(mesMost = moment()) {
+            if (!moment.isMoment(mesMost)) {
+                return null;
+            }
+            let prFecha = moment(mesMost).startOf('month');
+            let ulFecha = moment(mesMost).endOf('month');
+            let cells = [];
+
+            while (prFecha.day() !== 1) {
+                prFecha.subtract(1, 'days')
+            }
+
+            while (ulFecha.day() !== 0) {
+                ulFecha.add(1, 'days')
+            }
+
+            do {
+                cells.push({
+                    date: moment(prFecha),
+                    isInCurrentMonth: prFecha.month() === mesMost.month()
+                })
+                prFecha.add(1, 'days');
+
+                //} while (prFecha.isSameorBefore(ulFecha));
+            } while (prFecha <= ulFecha);
+            return cells;
+        }
+    }
+
+
+
+</script>
+
+<script type="text/javascript">
+    let calendar = new Calendar('calendar');
+
+    //calendar.getElement().addEventListener('change', e => {
+    //    console.log(calendar.value().format('LLL'));
+    //});
+
+    //let calendar2 = new Calendar('calendar2');
+    //calendar2.getElement().addEventListener('change', e => {
+    //    console.log(calendar2.value().format('LLL'));
+    //});
+</script>
+
+
+
 <!--script type="text/javascript" src="./js/calendar.js"></script-->
+
 
 
 <!--script>
@@ -226,18 +325,4 @@
     }
 }
 
-</script>
-
-
-
-<script type="text/javascript">
-    let calendar = new Calendar('calendar');
-    calendar.getElement().addEventListener('change', e => {
-        console.log(calendar.value().format('LLL'));
-    });
-
-    let calendar2 = new Calendar('calendar2');
-    calendar2.getElement().addEventListener('change', e => {
-        console.log(calendar2.value().format('LLL'));
-    });
 </script-->
