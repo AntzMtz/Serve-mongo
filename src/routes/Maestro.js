@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 const clase = require('../models/Mat01');
+const Nota = require('../models/Notes')
 const help = require('../lib/hander');
 
 router.get('/Mestro/NewClass', isLoggedIn, (req, res) => {
@@ -12,10 +13,12 @@ router.get('/Mestro/NewWorkHome', (req, res) => {
     res.render('Maestro/newWorkHome')
 });
 
-router.post('/Mestro/NewWorkHome', (req, res) => {
-    console.log(req);
-    
-    res.send('SiPaso')
+router.post('/notes',  async (req, res) => {
+    console.log(req.body)
+    const datosBD = await Nota.find({user:req.user.idUser}).sort({ "dia": -1 })
+    res.render('notes/findNote', {
+        datosBD
+    })    
 });
 
 router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
