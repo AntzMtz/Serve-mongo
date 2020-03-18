@@ -12,6 +12,12 @@ router.get('/Mestro/NewWorkHome', (req, res) => {
     res.render('Maestro/newWorkHome')
 });
 
+router.post('/Mestro/NewWorkHome', (req, res) => {
+    console.log(req);
+    
+    res.send('SiPaso')
+});
+
 router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
 
     const { nombre, grado } = req.body;
