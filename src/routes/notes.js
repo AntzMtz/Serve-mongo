@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const Nota = require('../models/Notes')
+var moment = require('moment');
 const {isLoggedIn, isNotLoggedIn}=require('../lib/aut');
 
 router.get('/notes/add',isLoggedIn, (req, res) => {
+    console.log("Pase");
+    console.log(fecha34);
+    fechas=JSON.stringify(fecha34[0].fecha);
     try {
-        res.render('notes/newnote');
+        res.render('notes/newnote',{
+         fechas
+        });
     } catch (error) {
         req.flash('error_ms', "No estas Logeado Favor de Logearte")
         res.redirect('/');
@@ -15,6 +21,12 @@ router.get('/notes/add',isLoggedIn, (req, res) => {
 router.post('/notes/newnote',isLoggedIn, async (req, res) => {
     try {
         const { titulo, descripcion } = req.body;
+        console.log("Paso3");
+        
+        console.log(JSON.stringify(fecha34));
+        var fech02=new Date(moment(fecha34[0].fecha).format('YYYY-MM-DD'));
+        console.log(fech02);
+        
         const errors = [];
         if (!titulo) {
             errors.push({ text: 'Porfavor escribe un titulo' });
@@ -29,8 +41,11 @@ router.post('/notes/newnote',isLoggedIn, async (req, res) => {
                 descripcion
             })
         } else {
+            
             const nuevaNota = new Nota({ titulo, descripcion });
-            nuevaNota.user=req.user.idUser;
+            nuevaNota.user=req.user.IDMaestro;
+            nuevaNota.dia=new Date(moment(fecha34[0].fecha).format('YYYY-MM-DD'));
+            //nuevaNota.dia=
             try {
                 await nuevaNota.save();
                 req.flash('success', 'Se inserto el registro ' + titulo + ' de forma correcta');
@@ -44,7 +59,9 @@ router.post('/notes/newnote',isLoggedIn, async (req, res) => {
             res.redirect('/notes');
         }
     } catch (error) {
-        req.flash('error_ms', "No estas Logeado Favor de Logearte")
+        console.log(error.message);
+        
+        req.flash('error', error.message)
         res.redirect('/');
     }
 });

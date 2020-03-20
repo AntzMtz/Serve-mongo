@@ -3,7 +3,7 @@
 <div class="container p-4">
     <div class="row">
         <div class="col-md-4 mx-auto">
-            <form action="/notes/" method="POST",{{Datos}}>
+            <form action="/notes/" method="POST" ,{{Datos}}>
                 <div class="root">
 
                     <div class="calendar" id="calendar">
@@ -186,12 +186,30 @@
     calendar.getElement().addEventListener('change', e => {
         console.log(calendar.value().format('DD/MMMM/YYYY'));
         console.log(calendar.value().format('LLLL'));
-        var fech = calendar.value().format('DD/MMMM/YYYY');
+        var fech = calendar.value().format('YYYY-MM-DD');
         Datos = [];
+
         Datos.push({ fecha: fech })
-        console.log(Datos)
-        document.getElementById('Nuevo').value = Datos[0].fecha;
+
+        //var d = new Date(calendar.value().format('YYYY-MM-DD'));
+        var d = new Date(fech + " 00:00:00");
+        var fech2 = sumarDias(d, 1);
+        var fech3 = fech2.format('YYYY-MM-DD') ;
+        Datos.push({ fecha: fech3 })
+        document.getElementById('Nuevo').value = JSON.stringify(Datos);
+
+
+        //var dateFormat = require('dateformat');
+        //var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+        //console.log(fech2.toLocaleDateString("es-ES", options))
+
+
     });
+
+    function sumarDias(fecha, dias) {
+        fecha.setDate(fecha.getDate() + dias);
+        return moment(fecha);
+    }
 
     //const but = document.getElementById('Guard');
     //but.addEventListener('click', envio, false);

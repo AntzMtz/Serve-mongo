@@ -4,7 +4,8 @@ const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 const clase = require('../models/Mat01');
 const Nota = require('../models/Notes')
 const help = require('../lib/hander');
-
+var moment = require('moment');
+// const app = express();
 router.get('/Mestro/NewClass', isLoggedIn, (req, res) => {
     res.render('Maestro/newClass')
 });
@@ -13,12 +14,36 @@ router.get('/Mestro/NewWorkHome', (req, res) => {
     res.render('Maestro/newWorkHome')
 });
 
-router.post('/notes',  async (req, res) => {
-    console.log(req.body)
-    const datosBD = await Nota.find({user:req.user.idUser}).sort({ "dia": -1 })
+router.post('/notes', async (req, res) => {
+    console.log("Donde estoy");
+
+    fechas = JSON.parse(req.body.Nuevo);
+    const fecha = JSON.parse(req.body.Nuevo);
+    fecha34=fechas;
+    req.app.locals.fecha34 =fechas;
+    //console.log(req.app.locals.fecha=(fechas));
+    //console.log("res.body");
+
+
+
+    const fechaini = new Date(moment(fechas[0].fecha).format('YYYY-MM-DD'));
+    const fechafin = new Date(moment(fechas[1].fecha).format('YYYY-MM-DD'));
+    console.log(fechaini, " ", fechafin);
+
+
+    const datosBD = await Nota.find({
+        user: req.user.IDMaestro,
+        dia: {
+            $gte: fechaini,
+            $lt: fechafin
+        }
+    })
+    console.log(datosBD);
+
     res.render('notes/findNote', {
-        datosBD
-    })    
+        datosBD,
+        fechaini
+    })
 });
 
 router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
@@ -36,9 +61,9 @@ router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
         const errors = [];
         if (error.code == '11000') {
             // req.flash("errors", "La Materia ");
-            errors.push({ text: "La Materia " + nombre + " de la escuela "+ ClaveCentro+" ya existe favor de introducir otro"});
+            errors.push({ text: "La Materia " + nombre + " de la escuela " + ClaveCentro + " ya existe favor de introducir otro" });
             res.render('Maestro/newClass', {
-                
+
                 errors,
                 nombre,
                 grado

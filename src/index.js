@@ -7,7 +7,7 @@ const session = require('express-session');
 const msySqlstore = require('express-mysql-session');
 const metoOver = require('method-override');
 const passport = require('passport');
-
+const fechas="";
  // para matar todos los nodos: killall node
 
 // const { database } = require('./keys')
@@ -49,7 +49,8 @@ app.use((req,res, next)=>{
     res.locals.error_ms=req.flash('error_ms');
     res.locals.error=req.flash('error');
     app.locals.usuario = req.user;
-    app.locals.materias=req.materias;
+    //app.locals.materias=req.materias;
+    app.locals.fecha34=fechas;
     next();
 });
 
