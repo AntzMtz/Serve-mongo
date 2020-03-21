@@ -32,7 +32,6 @@
 <script>
     class Calendar {
         constructor(id) {
-            console.log(id);
             this.cells1 = [];
             this.selDay = null;
             this.mesActual = moment();
@@ -191,7 +190,6 @@
 
         Datos.push({ fecha: fech })
 
-        //var d = new Date(calendar.value().format('YYYY-MM-DD'));
         var d = new Date(fech + " 00:00:00");
         var fech2 = sumarDias(d, 1);
         var fech3 = fech2.format('YYYY-MM-DD') ;
@@ -210,13 +208,6 @@
         fecha.setDate(fecha.getDate() + dias);
         return moment(fecha);
     }
-
-    //const but = document.getElementById('Guard');
-    //but.addEventListener('click', envio, false);
-
-    //function envio() {
-    //    return Datos;
-    //}
 
 </script>
 

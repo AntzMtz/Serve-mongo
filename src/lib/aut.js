@@ -11,7 +11,7 @@ module.exports={
         if(!req.isAuthenticated()){
             return next();
         }else{
-            return res.redirect('/notes');
+            return res.redirect('/Maestro');
         }
     }
 }

@@ -1,0 +1,58 @@
+ 
+#H2N2{
+    margin-top:10px;
+    padding: 0;
+    font-family: 'Poppins',sans-serif;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 25vh;
+    background-color: #000;
+}
+#H2N3{
+    position: relative;
+    margin: 20px 20px 0 0 ;
+    font-size: 3.4em;
+    font-weight: 900;
+    color: blanchedalmond;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#H2N3 span{
+    color: #ff022c;
+}
+
+#H2N3:before{
+    content: '';
+    position: absolute;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,transparent 0%,#000 5%,#000 100% );
+    animation: animate 5.5s linear forwards;
+    /* animation-delay: 2s; */
+    animation-duration: 5s;
+    animation-iteration-count:  infinite;
+}
+@keyframes animate{
+    0%{
+        left: 0%;
+    }
+    100%{
+        left: 100%;
+    }
+
+} 
+ #VV{
+    position: absolute;
+    top: 0;
+    left: -20%;
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: screen;
+} 

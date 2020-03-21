@@ -7,7 +7,6 @@ help.time = (dia) => {
 help.comparaAd = (usuario, idUser) => {
     var puente = 0;
     for (var propiedad in usuario) {
-        console.log(usuario[propiedad]);
         if (usuario[propiedad] == "Administrador" || (usuario == null && idUser)) {
             puente = 1;
         }
@@ -26,9 +25,7 @@ help.comparaDoc = (usuario, idUser) => {
         if (usuario[propiedad] == "Docente" || (usuario == null && idUser)) {
             puente = 1;
         }
-    }
-    console.log("puente"+puente);
-    
+    }    
     if (puente == 0) {
         return false;
     } else {
@@ -49,7 +46,6 @@ help.comparaPuesto = (puesto) => {
             Puest01.push({PuestoMd:puesto[propiedad],TextMd:AdminTXT});
         }
     }
-    console.log(Puest01);
     return Puest01;
 };
 

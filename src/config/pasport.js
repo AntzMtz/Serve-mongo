@@ -15,9 +15,8 @@ passtport.use('local.signin', new localSt({
         if (!vali) {
             return done(null, false, { message: 'contraseña no es valida' })
         } else {
-            console.log(Usuar01.id);
-
-            return done(null, Usuar01, req.flash('success', 'Usuario valido'))
+            //return done(null, Usuar01, req.flash('success', 'Usuario valido'))
+            return done(null, Usuar01)
         }
     }
 }));

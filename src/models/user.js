@@ -1,6 +1,5 @@
 const mongoDb = require('mongoose');
 const { Schema } = mongoDb;
-// console.log("esquema");
 const bcrypt = require('bcryptjs');
 var UserSchema = new Schema({
     idUser: { type: String, required: true },

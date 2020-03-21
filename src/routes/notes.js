@@ -2,14 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Nota = require('../models/Notes')
 var moment = require('moment');
-const {isLoggedIn, isNotLoggedIn}=require('../lib/aut');
+const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
-router.get('/notes/add',isLoggedIn, (req, res) => {
-    
+router.get('/notes/add', isLoggedIn, (req, res) => {
     try {
-        fechas=JSON.stringify(fecha34[0].fecha);
-        res.render('notes/newnote',{
-         fechas
+        res.render('notes/newnote', {
+            fechas
         });
     } catch (error) {
         req.flash('error_ms', error.message)
@@ -17,7 +15,7 @@ router.get('/notes/add',isLoggedIn, (req, res) => {
     }
 });
 
-router.post('/notes/newnote',isLoggedIn, async (req, res) => {
+router.post('/notes/newnote', isLoggedIn, async (req, res) => {
     try {
         const { titulo, descripcion } = req.body;
         const errors = [];
@@ -35,11 +33,9 @@ router.post('/notes/newnote',isLoggedIn, async (req, res) => {
             })
         } else {
             const nuevaNota = new Nota({ titulo, descripcion });
-            nuevaNota.user=req.user.IDMaestro;
-
-            //nuevaNota.dia=
+            nuevaNota.user = req.user.IDMaestro;
             try {
-                nuevaNota.dia=new Date(moment(fecha34[0].fecha).format('YYYY-MM-DD'));
+                nuevaNota.dia = new Date(moment(fecha34[0].fecha).format('YYYY-MM-DD'));
                 await nuevaNota.save();
                 req.flash('success', 'Se inserto el registro ' + titulo + ' de forma correcta');
             } catch (error) {
@@ -52,36 +48,49 @@ router.post('/notes/newnote',isLoggedIn, async (req, res) => {
             res.redirect('/notes');
         }
     } catch (error) {
-        console.log(error.message);
-        
         req.flash('error', error.message)
         res.redirect('/');
     }
 });
 
-router.get('/notes', isLoggedIn,async (req, res) => {
-    const datosBD = await Nota.find({user:req.user.idUser}).sort({ "dia": -1 })
-    res.render('notes/findNote', {
-        datosBD
-    })
+router.get('/notes', isLoggedIn, async (req, res) => {
+    try {
+        fechas = fecha34;
+        const fechaini = new Date(moment(fechas[0].fecha).format('YYYY-MM-DD'));
+        const fechafin = new Date(moment(fechas[1].fecha).format('YYYY-MM-DD'));
+        const datosBD = await Nota.find({
+            user: req.user.IDMaestro,
+            dia: {
+                $gte: fechaini,
+                $lt: fechafin
+            }
+        }).sort({ "dia": -1 })
+        res.render('notes/findNote', {
+            datosBD,
+            fechas
+        })
+    } catch (error) {
+        req.flash('error', error.message)
+        res.redirect('/Mestro/NewWorkHome');
+    }
 });
 
-router.get('/notes/ReadQR', async(req,res)=>{
+router.get('/notes/ReadQR', isLoggedIn,async (req, res) => {
     res.render('notes/readQr');
 });
 
-router.get('/notes/ReadQR2', async(req,res)=>{
+router.get('/notes/ReadQR2', isLoggedIn,async (req, res) => {
     res.render('notes/ReadQr2');
 });
 
-router.get('/notes/edit/:id',isLoggedIn, async (req, res) => {
+router.get('/notes/edit/:id', isLoggedIn, async (req, res) => {
     const dato = req.params.id;
     const datosBD1 = await Nota.find({ "_id": dato })
     const datosBD = datosBD1[0];
     res.render('notes/editNote', { datosBD });
 });
 
-router.put('/notes/editNote/:id',isLoggedIn, async (req, res) => {
+router.put('/notes/editNote/:id', isLoggedIn, async (req, res) => {
     const { titulo, descripcion } = req.body;
     try {
         await Nota.findByIdAndUpdate(req.params.id, { titulo, descripcion })
@@ -96,7 +105,7 @@ router.put('/notes/editNote/:id',isLoggedIn, async (req, res) => {
     res.redirect('/notes')
 });
 
-router.delete('/notes/editNote/:id',isLoggedIn, async (req, res) => {
+router.delete('/notes/editNote/:id', isLoggedIn, async (req, res) => {
     try {
         const del = await Nota.findByIdAndDelete(req.params.id);
         req.flash('success', 'Se elimino el registro ' + del.titulo + " de forma exitosa");

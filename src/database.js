@@ -20,10 +20,4 @@ mongodb.connect(conMongo, {
     .catch(err => console.log("DB Connection Error:" + err.message));
 
 
-
-
-
-
-
-
 module.exports = mongodb;
