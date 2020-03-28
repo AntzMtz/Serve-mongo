@@ -6,8 +6,15 @@ const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
 router.get('/notes/add', isLoggedIn, (req, res) => {
     try {
+        console.log("Materi");
+        
+        console.log(req.user.Materia);
+        const mate01 = req.user.Materia;
+         
         res.render('notes/newnote', {
-            fechas
+            fechas,
+            mate01
+
         });
     } catch (error) {
         req.flash('error_ms', error.message)
