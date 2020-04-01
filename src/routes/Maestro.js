@@ -10,17 +10,17 @@ router.get('/Mestro/NewClass', isLoggedIn, (req, res) => {
     res.render('Maestro/newClass')
 });
 
-router.get('/Mestro/NewWorkHome',isLoggedIn, (req, res) => {
+router.get('/Mestro/NewWorkHome', isLoggedIn, (req, res) => {
     res.render('Maestro/newWorkHome')
 });
 
-router.post('/notes', isLoggedIn,async (req, res) => {
+router.post('/notes', isLoggedIn, async (req, res) => {
 
     fechas = JSON.parse(req.body.Nuevo);
-    fecha34=fechas;
+    fecha34 = fechas;
     const fechaini = new Date(moment(fechas[0].fecha).format('YYYY-MM-DD'));
     const fechafin = new Date(moment(fechas[1].fecha).format('YYYY-MM-DD'));
-    
+
 
     const datosBD = await Nota.find({
         user: req.user.IDMaestro,
@@ -37,12 +37,13 @@ router.post('/notes', isLoggedIn,async (req, res) => {
 
 router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
 
-    const { nombre, grado } = req.body;
+    const { nombre, grado, grupo } = req.body;
     const { ClaveCentro } = req.user;
 
     try {
         const newClass = new clase({
-            Nombre: nombre, Grado: grado, ClaveCentro: ClaveCentro
+            
+            Nombre: nombre, Grado: grado, Grupo: grupo, ClaveCentro: ClaveCentro
         });
         await newClass.save();
         res.redirect('/Maestro')
