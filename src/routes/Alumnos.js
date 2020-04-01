@@ -8,6 +8,8 @@ router.get('/Alumnos/add',(req,res)=>{
 
 
 router.post('/Alumnos/add',(req,res)=>{
+    console.log(req.user);
+    
     res.send('Alumno/alumnosAdd.hbs')
 });
 
