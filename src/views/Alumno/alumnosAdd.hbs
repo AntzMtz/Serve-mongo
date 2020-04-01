@@ -1,0 +1,55 @@
+<div class="container p-4" id="conti">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>
+                        Agregar un Nuevo Alumno
+                    </h3>
+                </div>
+                <div class="card-boddy">
+                    <img id="login" src="/imagen/clase.jpg" alt="logo Antz"
+                        class="card-img-top mx-auto m-2 rounded-circle w-10">
+                    <form action="/Alumnos/add" method="POST">
+                        <div class="input-group mb-2">
+                            <input type="text" name="idAlumno" value="{{idAlumno}}" placeholder="Agrega el numero identificador del alumno" class="form-control"
+                                autofocus>
+                        </div>
+                        <div class="input-group mb-2">
+                              <!--input type="text" name="idEscuela" value="{{idEscuela}}"  min="1" max="20" placeholder="Agrega el grado de la clase" class="form-control"-->
+                              <input type="text" name="idEscuela" value="{{idEscuela}}"  placeholder="Identificador de la Escuela" class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                              <input type="text" name="codQr" value="{{codQr}}"  placeholder="generador QR" class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                              <input type="number" name="grado" value="{{grado}}"  min="1" max="20" placeholder="Agrega el grado de la clase" class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                              <input type="email" name="correoTutor" value="{{correoTutor}}"  placeholder="Agrega el correo del Tutor" class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                              <input type="text" name="nombreTutor" value="{{nombreTutor}}"  placeholder="Agrega el Nombre del Tutor" class="form-control">
+                        </div>
+                        <div class="input-group mb-2" >
+                              <input type="text" id="nom1" name="nombre" value="{{nombre}}"  placeholder="Nombre del Alumno" class="form-control">
+                              <input type="text" id="nom1" name="aPaterno" value="{{aPaterno}}"  placeholder="Apellido Paterno" class="form-control">
+                              <input type="text" id="nom1" name="aMaterno" value="{{aMaterno}}"  placeholder="Apellido Materno" class="form-control">
+                        </div>
+                        <div class="input-group mb-2" >
+                              <input type="text" id="nom1" name="direccion" value="{{direccion}}"  placeholder="Dirección del alumno" class="form-control">
+                              <input type="text" id="nom1" name="delegacion" value="{{delegacion}}"  placeholder="Delegación o Municipio" class="form-control">
+                              <input type="text" id="nom1" name="estado" value="{{estado}}"  placeholder="Estado" class="form-control">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
