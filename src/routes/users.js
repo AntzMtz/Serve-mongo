@@ -22,9 +22,12 @@ router.post('/users/singin', isNotLoggedIn, passport.authenticate('local.signin'
 router.get('/users/signup', isNotLoggedIn, async (req, res) => {
     json01 = []
     materias = await Mat1.aggregate([{ $group: { _id: "$Nombre", entries: { $push: "$Grado" } } }])
+    
     for (var i = 0; i < materias.length; i++) {
         json01.push(JSON.stringify(materias[i]));
     }
+    console.log(materias);
+    
     res.render('./users/singup', { materias, json01 })
 });
 

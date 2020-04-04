@@ -7,8 +7,10 @@ const session = require('express-session');
 const msySqlstore = require('express-mysql-session');
 const metoOver = require('method-override');
 const passport = require('passport');
-const fechas="";
- // para matar todos los nodos: killall node
+const fechas = "";
+const formidable = require('express-form-data');
+
+// para matar todos los nodos: killall node
 
 // const { database } = require('./keys')
 const pasport = require('passport')
@@ -25,7 +27,7 @@ app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
-    helpers:require('./lib/hander'),
+    helpers: require('./lib/hander'),
     extname: '.hbs'
 }));
 app.set('view engine', '.hbs');
@@ -42,15 +44,17 @@ app.use(pasport.initialize());
 app.use(pasport.session());
 app.use(morgan('dev'));
 app.use(flash());
-
+//app.use(formidable.parse({ keepExtensions: true, uploadDir:  path.join(__dirname, 'imagu') }));
+app.use(formidable.parse({ keepExtensions: true }));
 //Variables Globales
-app.use((req,res, next)=>{
-    res.locals.success=req.flash('success');
-    res.locals.error_ms=req.flash('error_ms');
-    res.locals.error=req.flash('error');
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error_ms = req.flash('error_ms');
+    res.locals.error = req.flash('error');
     app.locals.usuario = req.user;
     //app.locals.materias=req.materias;
-    app.locals.fecha34=fechas;
+    app.locals.fecha34 = fechas;
     next();
 });
 
@@ -66,10 +70,14 @@ app.use(require('./routes/Maestro'));
 app.use(require('./routes/Alumnos'));
 //Publicos
 
+
+
 //static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 //Start servidor
 app.listen(app.get('port'), () => {
     console.log("El servidor corre en el puerto: " + app.get('port'));
-
+    console.log(path.join(__dirname, 'public'));
 })

@@ -37,13 +37,13 @@ router.post('/notes', isLoggedIn, async (req, res) => {
 
 router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
 
-    const { nombre, grado, grupo } = req.body;
+    const { nombre, grado} = req.body;
     const { ClaveCentro } = req.user;
 
     try {
         const newClass = new clase({
             
-            Nombre: nombre, Grado: grado, Grupo: grupo, ClaveCentro: ClaveCentro
+            Nombre: nombre, Grado: grado,  ClaveCentro: ClaveCentro
         });
         await newClass.save();
         res.redirect('/Maestro')

@@ -39,17 +39,19 @@
                     </div>
                     <div class="input-group mb-3">
                         <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control"
-                            onchange=evento([{{json01}}])>
+                            onchange="evento({{json01}})">
                             <option disabled selected>Selecciona una materia</option>
                             {{#each materias}}
-                            <option value={{_id}}>
-                                <p>{{ _id}}</p>
+                            <option value="{{_id}}">
+                                <p>{{_id}}</p>
                             </option>
                             {{/each}}
                         </select>
                         <select id="Grado" value="" placeholder="Materia" name="Grado" class="form-control">
                             <option disabled selected>Grado</option>
                         </select>
+                        <input type="text" id="grupo" name="grupo" value="{{grupo}}" placeholder="grupo" class="form-control">
+
                         <a class="btn btn-success" id="btn01">add</a>
                     </div>
                     <div class="input-group mb-3" id="Tabla">
@@ -80,6 +82,7 @@
     const grad = document.getElementById('Grado');
     const boton = document.getElementById('btn01');
     const tablaDiv = document.getElementById('Tabla');
+    const grup = document.getElementById('grupo');
 
     var datos = [];
 
@@ -97,12 +100,14 @@
         var tabla = document.createElement("table");
         var tblBody = document.createElement("tbody");
         var fila = document.createElement("tr");
-        for (var y = 0; y < 2; y++) {
+        for (var y = 0; y < 3; y++) {
             var celda = document.createElement("td");
             if (y == 0) {
                 var butn = document.createTextNode("Materia ");
-            } else {
+            } else if (y == 1) { 
                 butn = document.createTextNode("Grado ");
+            }else{
+                butn = document.createTextNode("Grupo ");
             }
             celda.appendChild(butn);
             fila.appendChild(celda);
@@ -111,13 +116,16 @@
         // Creamos las celdas
         for (var i = 0; i < datos.length; i++) {
             fila = document.createElement("tr");
-            for (var j = 0; j < 3; j++) {
+            for (var j = 0; j < 4; j++) {
                 if (j == 0) {
                     celda = document.createElement("td");
                     butn = document.createTextNode(datos[i].Materia);
                 } else if (j == 1) {
                     celda = document.createElement("td");
                     butn = document.createTextNode(datos[i].Grado);
+                } else if (j == 2) {
+                    celda = document.createElement("td");
+                    butn = document.createTextNode(datos[i].Grupo);
                 } else {
                     celda = document.createElement("td");
                     butn = document.createElement('a');
@@ -138,10 +146,15 @@
     }
 
     function evento(e) {
+        var e = JSON.parse('[' + "{{json01}}".replace(/&quot;/g, '"') + ']');
         grad.innerHTML = "<option disabled selected>Grado</option>"
+        console.log(e.length);
+        console.log(materia.value);
+
         for (var i = 0; i < e.length; i++) {
             if (materia.value == e[i]._id) {
                 var gra1 = e[i].entries;
+                console.log(gra1);
                 for (var y = 0; y < gra1.length; y++) {
                     grad.innerHTML += "<option value=" + gra1[y] + ">" + gra1[y] + "</option>"
                 }
@@ -157,7 +170,7 @@
     }
 
     function agregar1() {
-        datos.push({ Materia: materia.value, Grado: grad.value })
+        datos.push({ Materia: materia.value, Grado: grad.value, Grupo: grup.value })
         tablaEner();
     }
 
@@ -171,7 +184,7 @@
             var res = str.replace(/&quot;/g, '"');
             var jss = JSON.parse(res);
             for (var propiedad in jss) {
-                datos.push({ Materia: jss[propiedad].Materia, Grado: jss[propiedad].Grado });
+                datos.push({ Materia: jss[propiedad].Materia, Grado: jss[propiedad].Grado,Grupo:jss[propiedad].Grupo });
             }
             tablaEner();
         }

@@ -1,0 +1,32 @@
+<div class="container p-4" id="conti">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>
+                        Agregar un Nuevo Alumno
+                    </h3>
+                </div>
+                <div class="card-boddy">
+                    <img id="login" src="/imagen/clase.jpg" alt="logo Antz"
+                        class="card-img-top mx-auto m-2 rounded-circle w-10">
+                    <form action="/Alumnos/imagenes" method="POST" enctype="multipart/form-data">
+                        <div class="input-group mb-2">
+                           <label for="title">Titulo</label>
+                           <input type="text" name="title" placeholder="titulo de la imagen" id="title">
+                        </div>
+                        <div class="input-group mb-2">
+                           <label for="archivo">Imagen</label>
+                           <input type="file" name="archivo" id="nom1" class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                            <button class="btn btn-success btn-block">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

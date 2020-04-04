@@ -5,7 +5,7 @@ const { Schema } = mongoDb;
 var MateriaSh = new Schema({
     Nombre: { type: String, required: true },
     Grado: { type: String, required: true },
-    Grupo:{type: String, required: true},
+    // Grupo:{type: String, required: true},
     ClaveCentro: { type: String, required:true }
 });
 
