@@ -12,36 +12,56 @@
                         class="card-img-top mx-auto m-2 rounded-circle w-10">
                     <form action="/Alumnos/add" method="POST">
                         <div class="input-group mb-2">
-                            <input type="text" name="idAlumno" value="{{idAlumno}}" placeholder="Agrega el numero identificador del alumno" class="form-control"
-                                autofocus>
+                            <input type="text" name="idAlumno" value="{{idAlumno}}"
+                                placeholder="Agrega el numero identificador del alumno" class="form-control" autofocus>
                         </div>
                         <div class="input-group mb-2">
-                              <!--input type="text" name="idEscuela" value="{{idEscuela}}"  min="1" max="20" placeholder="Agrega el grado de la clase" class="form-control"-->
-                              <input type="text" name="idEscuela" value="{{idEscuela}}"  placeholder="Identificador de la Escuela" class="form-control">
+                            <!--input type="text" name="idEscuela" value="{{idEscuela}}"  min="1" max="20" placeholder="Agrega el grado de la clase" class="form-control"-->
+                            <input type="text" name="idEscuela" value="{{idEscuela}}"
+                                placeholder="Identificador de la Escuela" class="form-control">
+                        </div>
+
+
+
+                        <div class="input-group mb-2">
+                            <div id="codigoQR"></div>
+                            <input type="hidden" name="codQr" value="{{codQr}}" placeholder="generador QR"
+                                class="form-control">
+                            <input type="button" id="generQr" value="generQr" class="btn btn-success">
+                            {{!-- <a href="#" id="generQr">Descargar</a> --}}
+                        </div>
+
+
+
+                        <div class="input-group mb-2">
+                            <input type="number" id="nom1" name="grado" value="{{grado}}" min="1" max="20"
+                                placeholder="Agrega el grado de la clase" class="form-control">
+                            <input type="text" id="nom1" name="grupo" value="{{grupo}}"
+                                placeholder="Agrega el grupo de la clase" class="form-control">
                         </div>
                         <div class="input-group mb-2">
-                            <input type="text" name="codQr" value="{{codQr}}"  placeholder="generador QR" class="form-control">
-                            
+                            <input type="email" name="correoTutor" value="{{correoTutor}}"
+                                placeholder="Agrega el correo del Tutor" class="form-control">
                         </div>
                         <div class="input-group mb-2">
-                              <input type="number" id="nom1" name="grado" value="{{grado}}"  min="1" max="20" placeholder="Agrega el grado de la clase" class="form-control">
-                              <input type="text" id="nom1" name="grupo" value="{{grupo}}"  placeholder="Agrega el grupo de la clase" class="form-control">
+                            <input type="text" name="nombreTutor" value="{{nombreTutor}}"
+                                placeholder="Agrega el Nombre del Tutor" class="form-control">
                         </div>
                         <div class="input-group mb-2">
-                              <input type="email" name="correoTutor" value="{{correoTutor}}"  placeholder="Agrega el correo del Tutor" class="form-control">
+                            <input type="text" id="nom1" name="nombre" value="{{nombre}}"
+                                placeholder="Nombre del Alumno" class="form-control">
+                            <input type="text" id="nom1" name="aPaterno" value="{{aPaterno}}"
+                                placeholder="Apellido Paterno" class="form-control">
+                            <input type="text" id="nom1" name="aMaterno" value="{{aMaterno}}"
+                                placeholder="Apellido Materno" class="form-control">
                         </div>
                         <div class="input-group mb-2">
-                              <input type="text" name="nombreTutor" value="{{nombreTutor}}"  placeholder="Agrega el Nombre del Tutor" class="form-control">
-                        </div>
-                        <div class="input-group mb-2" >
-                              <input type="text" id="nom1" name="nombre" value="{{nombre}}"  placeholder="Nombre del Alumno" class="form-control">
-                              <input type="text" id="nom1" name="aPaterno" value="{{aPaterno}}"  placeholder="Apellido Paterno" class="form-control">
-                              <input type="text" id="nom1" name="aMaterno" value="{{aMaterno}}"  placeholder="Apellido Materno" class="form-control">
-                        </div>
-                        <div class="input-group mb-2" >
-                              <input type="text" id="nom1" name="direccion" value="{{direccion}}"  placeholder="Dirección del alumno" class="form-control">
-                              <input type="text" id="nom1" name="delegacion" value="{{delegacion}}"  placeholder="Delegación o Municipio" class="form-control">
-                              <input type="text" id="nom1" name="estado" value="{{estado}}"  placeholder="Estado" class="form-control">
+                            <input type="text" id="nom1" name="direccion" value="{{direccion}}"
+                                placeholder="Dirección del alumno" class="form-control">
+                            <input type="text" id="nom1" name="delegacion" value="{{delegacion}}"
+                                placeholder="Delegación o Municipio" class="form-control">
+                            <input type="text" id="nom1" name="estado" value="{{estado}}" placeholder="Estado"
+                                class="form-control">
                         </div>
 
                         <div class="input-group mb-2">
@@ -55,3 +75,34 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/JS/GenQR/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
+<script>
+    var miCodigoQR = new QRCode("codigoQR");
+    function comenzar() {
+        
+        var btnGen = document.getElementById('generQr');
+        btnGen.addEventListener('click', genera, false);
+
+    }
+    function genera() {
+        var idAlumno = document.getElementsByName('idAlumno');
+        var idEscuela = document.getElementsByName('idEscuela');
+
+        if (idAlumno[0].value == "" || idEscuela[0].value == "") {
+            alert("ingresa la secundaria y el Numero del alumno");
+            idAlumno[0].focus();
+        } else {
+            var conm = idAlumno[0].value + idEscuela[0].value;
+            console.log(conm)
+            miCodigoQR.makeCode(conm);
+        }
+    }
+
+
+
+    window.addEventListener('load', comenzar, false)
+</script>
