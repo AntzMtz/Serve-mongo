@@ -1,3 +1,7 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/JS/qrcode.min.js"></script>
+
 <div class="container p-4" id="conti">
     <div class="row">
         <div class="col-md-4 mx-auto">
@@ -10,25 +14,31 @@
                 <div class="card-boddy">
                     <img id="login" src="/imagen/clase.jpg" alt="logo Antz"
                         class="card-img-top mx-auto m-2 rounded-circle w-10">
-                    <form action="/Alumnos/add" method="POST">
+                    <form action="/Alumnos/add" method="POST" enctype="multipart/form-data">
                         <div class="input-group mb-2">
-                            <input type="text" name="idAlumno" value="{{idAlumno}}"
+                            <input type="text" id="idAlumno" name="idAlumno" value="{{idAlumno}}"
                                 placeholder="Agrega el numero identificador del alumno" class="form-control" autofocus>
                         </div>
                         <div class="input-group mb-2">
-                            <!--input type="text" name="idEscuela" value="{{idEscuela}}"  min="1" max="20" placeholder="Agrega el grado de la clase" class="form-control"-->
-                            <input type="text" name="idEscuela" value="{{idEscuela}}"
+                            <input type="text" id="idEscuela" name="idEscuela" value="{{idEscuela}}"
                                 placeholder="Identificador de la Escuela" class="form-control">
                         </div>
 
 
 
-                        <div class="input-group mb-2">
-                            <div id="codigoQR"></div>
-                            <input type="hidden" name="codQr" value="{{codQr}}" placeholder="generador QR"
-                                class="form-control">
-                            <input type="button" id="generQr" value="generQr" class="btn btn-success">
-                            {{!-- <a href="#" id="generQr">Descargar</a> --}}
+                        <div class="input-group mb-3">
+                            <div id="qrcode" name="codigoQR" class="input-group mb-4">
+
+                            </div>
+                            <div>
+                                <input type="hidden" name="codQr" id="codQr" value="" placeholder="generador QR"
+                                    class="form-control">
+                            </div>
+                            <div>
+                                <input type="button" id="generQr" value="Generar codigo del Alumno"
+                                    class="btn btn-success  btn-block">
+                            </div>
+
                         </div>
 
 
@@ -76,33 +86,48 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="/JS/GenQR/davidshimjs-qrcodejs-04f46c6/qrcode.js"></script>
 <script>
-    var miCodigoQR = new QRCode("codigoQR");
+
+    var Codicade = btoa("");
+    var DesCodicade = atob("");
+    var encrypted = CryptoJS.AES.encrypt("", "");
+    var codgen = "";
+    var BtGenera = document.getElementById("generQr");
+    document.getElementById('qrcode').innerHTML = "";
+    var namCode =document.getElementById('codQr');
+    var idAlumno = document.getElementById('idAlumno');
+    var idEscuela = document.getElementById('idEscuela');
+
     function comenzar() {
-        
-        var btnGen = document.getElementById('generQr');
-        btnGen.addEventListener('click', genera, false);
-
+    //    if(namCode.value!=""){
+    //        genera();
+    //    }
+        BtGenera.addEventListener("click", genera, false);
     }
+
     function genera() {
-        var idAlumno = document.getElementsByName('idAlumno');
-        var idEscuela = document.getElementsByName('idEscuela');
-
-        if (idAlumno[0].value == "" || idEscuela[0].value == "") {
-            alert("ingresa la secundaria y el Numero del alumno");
-            idAlumno[0].focus();
-        } else {
-            var conm = idAlumno[0].value + idEscuela[0].value;
-            console.log(conm)
-            miCodigoQR.makeCode(conm);
-        }
+        document.getElementById('qrcode').innerHTML = "";
+        var qrgene = new QRCode(document.getElementById("qrcode"));
+        codgen = idAlumno.value + idEscuela.value;
+        encriptar();
+        qrgene.makeCode(Codicade);
+        document.getElementById('codQr').value = Codicade;
+    //    desEncripar()
     }
 
+    function encriptar() {
+        var CadEnc = codgen;
+        encrypted = CryptoJS.AES.encrypt(CadEnc, "");
+        Codicade = btoa(encrypted);
+    }
 
+    function desEncripar() {
+        var desEnc = Codicade;
+        //var desEnc="VTJGc2RHVmtYMThKcytyaWhxVlF5c2NNUWcvOXYvTHN6YVBwODQ5STZXMD0=";
+        DesCodicade = atob(desEnc);
+        var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
+        console.log("Descode: " + decrypted.toString(CryptoJS.enc.Utf8));
+    }
 
     window.addEventListener('load', comenzar, false)
 </script>
