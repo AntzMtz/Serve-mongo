@@ -14,8 +14,8 @@ var AlumSchema = new Schema({
     aMaterno:{type:String,required:true},
     direccion:{type:String,required:true},
     delegacion:{type:String,required:true},
-    estado:{type:String,required:true}
-    
+    estado:{type:String,required:true},
+    materias:{type:Array,required:true}
 });
 
 module.exports = mongoDb.model('alumnos01', AlumSchema);

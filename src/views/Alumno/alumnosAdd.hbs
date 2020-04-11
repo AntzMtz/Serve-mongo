@@ -74,10 +74,30 @@
                                 class="form-control">
                         </div>
 
+
+                        <div class="input-group mb-2">
+                            <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control">
+                                <option disabled selected>Selecciona una materia</option>
+                                {{#each materias}}
+                                <option value="{{_id}}">
+                                    <p>{{_id}}</p>
+                                </option>
+                                {{/each}}
+                            </select>
+                            <a class="btn btn-success" id="btn01">add</a>
+                        </div>
+                        <div class="input-group mb-3" id="Tabla">
+                        </div>
+
+
+
                         <div class="input-group mb-2">
                             <button class="btn btn-success btn-block">
                                 Guardar
                             </button>
+                        </div>
+                        <div class="input-group mb-3" id="Tabla1">
+                            <input type="text" value="{{Texto}}" id="Texto" name="Texto" value="Hola">
                         </div>
                     </form>
                 </div>
@@ -94,25 +114,39 @@
     var codgen = "";
     var BtGenera = document.getElementById("generQr");
     document.getElementById('qrcode').innerHTML = "";
-    var namCode =document.getElementById('codQr');
+    var namCode = document.getElementById('codQr');
     var idAlumno = document.getElementById('idAlumno');
     var idEscuela = document.getElementById('idEscuela');
 
+
+    const materia = document.getElementById('Materia');
+    const boton = document.getElementById('btn01');
+    const tablaDiv = document.getElementById('Tabla');
+    var datos = [];
+
     function comenzar() {
-    //    if(namCode.value!=""){
-    //        genera();
-    //    }
+        document.getElementById("Tabla").innerHTML = "";
+        carga();
+        boton.addEventListener('click', agregar1, false);
         BtGenera.addEventListener("click", genera, false);
     }
 
     function genera() {
+
         document.getElementById('qrcode').innerHTML = "";
-        var qrgene = new QRCode(document.getElementById("qrcode"));
+
         codgen = idAlumno.value + idEscuela.value;
-        encriptar();
-        qrgene.makeCode(Codicade);
-        document.getElementById('codQr').value = Codicade;
-    //    desEncripar()
+        if (idAlumno.value == "" || idEscuela.value == "") {
+            alert('Favor de informar Identificador del alumno e Identificador de la Escuela ')
+        } else {
+            var qrgene = new QRCode(document.getElementById("qrcode"));
+            encriptar();
+            qrgene.makeCode(Codicade);
+            document.getElementById('codQr').value = Codicade;
+
+        }
+
+
     }
 
     function encriptar() {
@@ -128,6 +162,85 @@
         var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
         console.log("Descode: " + decrypted.toString(CryptoJS.enc.Utf8));
     }
+
+    function carga() {
+        var str = [{}];
+        str1 = "{{Texto}}";
+        if (str1 == "") {
+            datos.push();
+        } else {
+            var str = str1;
+            var res = str.replace(/&quot;/g, '"');
+            var jss = JSON.parse(res);
+            for (var propiedad in jss) {
+                datos.push({ Materia: jss[propiedad].Materia, Grado: jss[propiedad].Grado, Grupo: jss[propiedad].Grupo });
+            }
+            tablaEner();
+        }
+
+        document.getElementById('Texto').value = JSON.stringify(datos);
+        //      document.getElementById("Tipo").value = "{{Tipo}}";
+    }
+
+    function tablaEner() {
+        document.getElementById('Tabla').innerHTML = "";
+        document.getElementById('Texto').value = JSON.stringify(datos);
+
+        var body = document.getElementById('Tabla');
+        var tabla = document.createElement("table");
+        var tblBody = document.createElement("tbody");
+        var fila = document.createElement("tr");
+        for (var y = 0; y < 1; y++) {
+            var celda = document.createElement("td");
+            if (y == 0) {
+                var butn = document.createTextNode("Materia ");
+            }
+            celda.appendChild(butn);
+            fila.appendChild(celda);
+        }
+        tblBody.appendChild(fila);
+
+        // Creamos las celdas
+        for (var i = 0; i < datos.length; i++) {
+            fila = document.createElement("tr");
+            for (var j = 0; j < 2; j++) {
+                if (j == 0) {
+                    celda = document.createElement("td");
+                    butn = document.createTextNode(datos[i].Materia);
+                } else {
+                    celda = document.createElement("td");
+                    butn = document.createElement('a');
+                    var ima = document.createElement('i');
+                    ima.setAttribute("id", datos[i].Materia + "," + i);
+                    ima.setAttribute('class', 'fas fa-trash');
+                    butn.appendChild(ima);
+                    butn.addEventListener("click", eliminarPorName, false);
+                }
+                celda.appendChild(butn);
+                fila.appendChild(celda);
+            }
+            tblBody.appendChild(fila);
+        }
+      
+        tabla.appendChild(tblBody);
+        body.appendChild(tabla);
+        tabla.setAttribute('class', 'table table-dark');
+    }
+
+    function agregar1() {
+        datos.push({ Materia: materia.value })
+        tablaEner();
+    }
+
+    function eliminarPorName(e) {
+        var arrayDeCadenas = e.target.id.split(",");
+        var elimi = arrayDeCadenas[1]
+        console.log(elimi);
+        let remo1 = datos.splice(elimi, 1);
+        console.log(remo1);
+        tablaEner();
+    }
+
 
     window.addEventListener('load', comenzar, false)
 </script>

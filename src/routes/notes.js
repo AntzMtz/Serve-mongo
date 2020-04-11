@@ -1,20 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Nota = require('../models/Notes')
+const alumnos = require('../models/alumno');
 var moment = require('moment');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
 router.get('/notes/add', isLoggedIn, (req, res) => {
     try {
-        console.log("Materi");
-        
-        console.log(req.user.Materia);
         const mate01 = req.user.Materia;
-         
         res.render('notes/newnote', {
             fechas,
             mate01
-
         });
     } catch (error) {
         req.flash('error_ms', error.message)
@@ -24,7 +20,10 @@ router.get('/notes/add', isLoggedIn, (req, res) => {
 
 router.post('/notes/newnote', isLoggedIn, async (req, res) => {
     try {
-        const { titulo, descripcion } = req.body;
+        const { titulo, descripcion, Materia, grupo } = req.body;
+        var Mat1 = Materia.split(",")
+        var Materia1 = [];
+        Materia1.push({ "Materia": Mat1[0], "Gardo": Mat1[1] })
         const errors = [];
         if (!titulo) {
             errors.push({ text: 'Porfavor escribe un titulo' });
@@ -32,6 +31,7 @@ router.post('/notes/newnote', isLoggedIn, async (req, res) => {
         if (!descripcion) {
             errors.push({ text: 'Porfavor escribe una descripción' });
         }
+
         if (errors.length > 0) {
             res.render('notes/newnote', {
                 errors,
@@ -40,7 +40,11 @@ router.post('/notes/newnote', isLoggedIn, async (req, res) => {
             })
         } else {
             const nuevaNota = new Nota({ titulo, descripcion });
+            console.log(req.user.ClaveCentro);
             nuevaNota.user = req.user.IDMaestro;
+            nuevaNota.grado = Materia1;
+            nuevaNota.centro = req.user.ClaveCentro;
+            nuevaNota.grupo = grupo;
             try {
                 nuevaNota.dia = new Date(moment(fecha34[0].fecha).format('YYYY-MM-DD'));
                 await nuevaNota.save();
@@ -82,18 +86,39 @@ router.get('/notes', isLoggedIn, async (req, res) => {
     }
 });
 
-router.get('/notes/ReadQR', isLoggedIn,async (req, res) => {
+router.get('/notes/ReadQR', isLoggedIn, async (req, res) => {
     res.render('notes/readQr');
 });
 
-router.get('/notes/ReadQR2', isLoggedIn,async (req, res) => {
+router.get('/notes/ReadQR2', isLoggedIn, async (req, res) => {
     res.render('notes/ReadQr2');
+});
+
+router.get('/notes/checkin/:id', isLoggedIn, async (req, res) => {
+    const dato = req.params.id;
+    const datosBD1 = await Nota.find({ "_id": dato })
+    const datosBD = datosBD1[0];
+    const mate = datosBD.grado[0].Materia;
+    const {titulo,descripcion} = datosBD;
+    console.log(datosBD);
+    
+
+    const ClaveCentro = req.user.ClaveCentro;
+    const al03 = await alumnos.find({ "idEscuela": ClaveCentro, "materias.Materia": datosBD.grado[0].Materia, "grado": datosBD.grado[0].Gardo });
+    //console.log(al03);
+    const alum01 = JSON.stringify(al03);
+
+    res.render('notes/checkin', { alum01, mate,titulo,descripcion });
+
 });
 
 router.get('/notes/edit/:id', isLoggedIn, async (req, res) => {
     const dato = req.params.id;
+
+
     const datosBD1 = await Nota.find({ "_id": dato })
     const datosBD = datosBD1[0];
+    console.log(datosBD);
     res.render('notes/editNote', { datosBD });
 });
 

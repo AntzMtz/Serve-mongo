@@ -38,5 +38,24 @@ body {
     padding: 1px;
 }
 
+.nom1{
+    font-size: x-small;
+    /* background-color: crimson; */
+    margin: 1px;
+    padding: 1px;
+}
+
+.check{
+    font-size: x-small;
+    justify-content: center;
+    /* background-color: crimson; */
+    margin: 1px;
+    padding: 1px;
+    width: 10px;
+    height: 10px;
+}
+.rojo{
+    background-color: crimson;
+}
 
 

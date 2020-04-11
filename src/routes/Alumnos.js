@@ -3,18 +3,26 @@ const router = express.Router();
 const path1 = require('path');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 const alumno = require('../models/alumno');
+const Mat1 = require('../models/Mat01');
 const fs = require('fs');
 
 const qrcode = require('qrcode');
 
-router.get('/Alumnos/add', isLoggedIn, (req, res) => {
+router.get('/Alumnos/add', isLoggedIn, async (req, res) => {
+    json01 = []
+    materias = await Mat1.aggregate([{ $group: { _id: "$Nombre", entries: { $push: "$Grado" } } }])
 
-    res.render('Alumno/alumnosAdd.hbs');
+    for (var i = 0; i < materias.length; i++) {
+        json01.push(JSON.stringify(materias[i]));
+    }
+    console.log(materias);
+
+    res.render('Alumno/alumnosAdd.hbs', { materias, json01 });
 
 });
 
 router.post('/Alumnos/add', isLoggedIn, async (req, res) => {
-    const { idAlumno, idEscuela, codQr, grupo, grado, correoTutor, nombreTutor, nombre, aPaterno, aMaterno, direccion, delegacion, estado } = req.body;
+    const { idAlumno, idEscuela, codQr, grupo, grado, correoTutor, nombreTutor, nombre, aPaterno, aMaterno, direccion, delegacion, estado, Texto } = req.body;
     const errors1 = [];
     const errors = [];
     try {
@@ -58,11 +66,14 @@ router.post('/Alumnos/add', isLoggedIn, async (req, res) => {
         if (estado == "") {
             errors1.push({ text: 'Ingresar el Estado' });
         }
-
+        if (Texto.length < 1 || Texto == "{}" || Texto == "[]") {
+            errors1.push({ text: 'Es necesario introducir almenos una materia ' })
+        }
 
 
         const newAlum = new alumno({
-            idAlumno, idEscuela, codQr, grado, grupo, correoTutor, nombreTutor, nombre, aPaterno, aMaterno, direccion, delegacion, estado
+            idAlumno, idEscuela, codQr, grado, grupo, correoTutor, nombreTutor, 
+            nombre, aPaterno, aMaterno, direccion, delegacion, estado, materias:JSON.parse(Texto)
         });
         await newAlum.save();
         const path3 = path1.join(__dirname, '../', 'imagu/');
@@ -91,10 +102,26 @@ router.post('/Alumnos/add', isLoggedIn, async (req, res) => {
                 errors.push({ text: "El error es: " + error });
             }
         }
-
-
         console.log("Error: " + error);
-        res.render('Alumno/alumnosAdd.hbs', { idAlumno, idEscuela, codQr, grupo, grado, correoTutor, nombreTutor, nombre, aPaterno, aMaterno, direccion, delegacion, estado, errors })
+        res.render('Alumno/alumnosAdd.hbs', {
+            idAlumno,
+            idEscuela,
+            codQr,
+            grupo,
+            grado,
+            correoTutor,
+            nombreTutor,
+            nombre,
+            aPaterno,
+            aMaterno,
+            direccion,
+            delegacion,
+            estado,
+            errors,
+            Texto,
+            materias,
+            json01
+        })
     }
 
 });
