@@ -3,6 +3,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+
+<!--script src="./QRLeer/jquery.min.js"></script-->
+<script src="/JS/instascan.min.js"></script>
+
 <div class="container p-4" id="conti">
     <div class="row">
         <div class="col-md-4 mx-auto">
@@ -23,7 +28,8 @@
                         </h3>
                     </div>
                     <div>
-                        <input type="text" value="{{Texto}}" id="Texto" name="Texto" value="Hola">
+                        <video id="preview" width="300" height="300"></video>
+                        <input type="text" value="{{texto}}" id="texto" name="texto" value="Hola">
                     </div>
                     <div class="input-group mb-3" id="Tabla">
                     </div>
@@ -34,48 +40,51 @@
 </div>
 
 
-<div class="bs-example">
-    <div id="myModal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Send Us a Message</h5>
+<div class="container p-4" id="conti1">
+    <div id="myModal" class="modal fade " tabindex="-1">
+        <div class="modal-dialog ">
+            <div class="modal-content ">
+                <div class="modal-header rojo">
+                    <h5 class="fonts modal-title">Calificación de la Tarea</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body">
+
+                <div class="rojo modal-body">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label>First Name</label>
-                                <input type="text" id="Fname" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label>Comments</label>
-                                <textarea class="form-control"></textarea>
-                            </div>
-                        </div>
+                        <table class="table table-dark">
+                            <tr>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" id='0' name="optradio"></td>
+                                <td><input type="radio" id='1' name="optradio"></td>
+                                <td><input type="radio" id='2' name="optradio"></td>
+                                <td><input type="radio" id='3' name="optradio"></td>
+                                <td><input type="radio" id='4' name="optradio"></td>
+                                <td><input type="radio" id='5' name="optradio"></td>
+                                <td><input type="radio" id='6' name="optradio"></td>
+                                <td><input type="radio" id='7' name="optradio"></td>
+                                <td><input type="radio" id='8' name="optradio"></td>
+                                <td><input type="radio" id='9' name="optradio"></td>
+                                <td><input type="radio" id='10' name="optradio"></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
+
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="cancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="button" id="Envia" class="btn btn-primary">Send Email</button>
                 </div>
             </div>
@@ -88,6 +97,7 @@
 <script>
     const tablaDiv = document.getElementById('Tabla');
     var datos = [];
+    var cod = "";
     var jss = [];
     var retVal = "";
     var fi034 = "";
@@ -95,11 +105,8 @@
     function comenzar() {
         document.getElementById("Tabla").innerHTML = "";
         carga();
-        var cod = 'VTJGc2RHVmtYMTlQQ283azg3U2RtYVlDUjA4VEpON3c3ZGhMNWlZeVIxMD0&#x3D;'
-        document.getElementById(cod).checked = true;
-        activar(cod);
+        scanQr();
     }
-
     function carga() {
         var str = [{}];
         str1 = "{{alum01}}";
@@ -108,11 +115,11 @@
         } else {
             var str = str1;
             var res = str.replace(/&quot;/g, '"');
-            jss = JSON.parse(res);
+            res1 = res.replace(/&#x3D;/g, '=');
+            jss = JSON.parse(res1);
             tablaEner();
         }
     }
-
     function tablaEner() {
         document.getElementById('Tabla').innerHTML = "";
         var materia1 = "{{mate}}";
@@ -121,7 +128,7 @@
         var tblBody = document.createElement("tbody");
         var fila = document.createElement("tr");
         var { butn, nomBtn } = "";
-
+        
         for (var y = 0; y < 4; y++) {
             var celda = document.createElement("td");
             switch (y) {
@@ -162,24 +169,27 @@
                         butn = document.createTextNode(jss[i].grado + jss[i].grupo);
                         break;
                     case 4:
-                        butn = document.createElement('div');
+                        butn = document.createElement('input');
                         butn.setAttribute('class', 'input-group mb-2 nom1')
-                        var ima = document.createElement('input');
-                        ima.setAttribute("type", "checkbox")
-                        ima.setAttribute("id", jss[i].codQr);
-                        ima.setAttribute('class', ' check');
-                        butn.appendChild(ima);
+                        //butn.setAttribute("id", jss[i].codQr);
+                        //var ima = document.createElement('input');
+                        butn.setAttribute("type", "checkbox")
+                        butn.setAttribute("id", jss[i].codQr);
+                        //ima.setAttribute('class', ' check');
+                        //butn.appendChild(ima);
                         butn.addEventListener("click", clickchec, false);
                         break;
                     case 5:
-                        butn = document.createElement('div');
-                        butn.setAttribute('class', 'input-group mb-2 nom1')
-                        var ima1 = document.createElement('input');
-                        ima1.setAttribute("type", "hidden")
-                        ima1.setAttribute("id", jss[i].codQr + "," + "text");
-                        ima1.setAttribute('class', 'check');
-                        ima1.setAttribute('disabled', "disabled");
-                        butn.appendChild(ima1);
+                        butn = document.createElement('input');
+                        //var ima1 = document.createElement('input');
+                        //ima1.setAttribute("type", "text");
+                        butn.setAttribute("id", jss[i].codQr + "," + "text");
+                        
+                        butn.setAttribute('class', 'input-group mb-2 norma ');
+                        //butn.setAttribute('id','cabecera')
+                        //ima1.setAttribute('class', 'norma');
+                        //ima1.setAttribute('disabled', "disabled");
+                        //butn.appendChild(ima1);
                         break;
 
 
@@ -195,50 +205,86 @@
     }
 
 
-
+    //genera ventana flotante
     function clickchec(e) {
         const y = e.target.getAttribute('id');
         activar(y);
     };
-
     function activar(y) {
         fi034 = "";
-        const cod = y;
-
+        cod = y;
         cod1 = y + "," + "text";
         document.getElementById(cod1).value = "";
 
         if (document.getElementById(cod).checked == true) {
             VerCondiciones();
         } else {
-
-            console.log("No paso" + fi034)
+            cance();
+            console.log("No paso" + fi034);
         }
-
-
-
     };
-
-    function getValue() {
-        retVal = prompt("Enter your name : ", "your name here");
-        //document.write("You have entered : " + retVal);
-    }
-
-
     function VerCondiciones() {
 
         $("#myModal").modal('show');
         const btt = document.getElementById('Envia');
-        btt.addEventListener('click', fun01, {}, false);
+        const btt1 = document.getElementById('cancel');
 
+        btt.addEventListener('click', fun01, {}, false);
+        btt1.addEventListener('click',cance,false);
     }
     function fun01() {
-
-        fi034 = Fname.value;
+        console.log($('input:radio[name=optradio]:checked')[0].getAttribute('id'));
+        fi034 = $('input:radio[name=optradio]:checked')[0].getAttribute('id');
         document.getElementById(cod1).value = fi034;
         $("#myModal").modal('hide');
 
     }
+    //genera ventana flotante
+    function scanQr() {
+        let scanner = new Instascan.Scanner({
+            video: document.getElementById('preview')
+        });
+        scanner.addListener('scan', function (content) {
+            console.log("Nombre: " + content);
+
+            var desEnc = content;
+            DesCodicade = atob(desEnc);
+            //console.log(DesCodicade);
+            var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
+            //console.log(decrypted);
+            console.log("Descode: " + decrypted.toString(CryptoJS.enc.Utf8));
+
+            document.getElementById("texto").value = content;
+
+            cod = content;
+            console.log(cod);
+            document.getElementById(cod).checked = true;
+            activar(cod);
+
+
+        });
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length == 1) {
+                scanner.start(cameras[0]);
+            } else if (cameras.length > 1) {
+                scanner.mirror = false;
+                scanner.start(cameras[1]);
+            }
+            else {
+                console.error('No cameras found.');
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
+    }
+
+function cance(){
+    var limp = document.getElementById('texto').value;
+    console.log(limp);
+    document.getElementById(limp).checked = false;
+    document.getElementById('texto').value="";
+}
+
 
     window.addEventListener('load', comenzar, false)
 
