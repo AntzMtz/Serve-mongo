@@ -7,8 +7,8 @@ var NoteSchema = new Schema({
     dia: { type: Date, required: true },
     user: { type: String, required: true },
     grado: { type: Array, required: true },
-    centro:{type:String, required:true},
-    grupo:{type:String, required:true}
+    centro: { type: String, required: true }
+    // grupo:{type:String, required:true}
 
 });
 

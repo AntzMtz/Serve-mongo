@@ -28,7 +28,7 @@
                         </h3>
                     </div>
                     <div>
-                        <video id="preview" width="300" height="300"></video>
+                        <video id="preview" width="100%" height="100%"></video>
                         <input type="text" value="{{texto}}" id="texto" name="texto" value="Hola">
                     </div>
                     <div class="input-group mb-3" id="Tabla">
@@ -128,7 +128,7 @@
         var tblBody = document.createElement("tbody");
         var fila = document.createElement("tr");
         var { butn, nomBtn } = "";
-        
+
         for (var y = 0; y < 4; y++) {
             var celda = document.createElement("td");
             switch (y) {
@@ -146,11 +146,12 @@
                     break;
             }
             butn = document.createTextNode(nomBtn);
+            
             celda.appendChild(butn);
+            celda.setAttribute('style','font-size:80%;');
             fila.appendChild(celda);
         }
         tblBody.appendChild(fila);
-
         for (var i = 0; i < jss.length; i++) {
             fila = document.createElement("tr");
             for (var j = 0; j < 6; j++) {
@@ -170,12 +171,12 @@
                         break;
                     case 4:
                         butn = document.createElement('input');
-                        butn.setAttribute('class', 'input-group mb-2 nom1')
-                        //butn.setAttribute("id", jss[i].codQr);
+                        //butn.setAttribute('class', 'input-group mb-2 nom1')
+                        butn.setAttribute("id", jss[i].codQr);
                         //var ima = document.createElement('input');
                         butn.setAttribute("type", "checkbox")
                         butn.setAttribute("id", jss[i].codQr);
-                        //ima.setAttribute('class', ' check');
+
                         //butn.appendChild(ima);
                         butn.addEventListener("click", clickchec, false);
                         break;
@@ -184,16 +185,15 @@
                         //var ima1 = document.createElement('input');
                         //ima1.setAttribute("type", "text");
                         butn.setAttribute("id", jss[i].codQr + "," + "text");
-                        
+                        butn.setAttribute('style', 'width:10px;height:8px');
                         butn.setAttribute('class', 'input-group mb-2 norma ');
                         //butn.setAttribute('id','cabecera')
                         //ima1.setAttribute('class', 'norma');
                         //ima1.setAttribute('disabled', "disabled");
                         //butn.appendChild(ima1);
                         break;
-
-
                 }
+                celda.setAttribute('style','font-size:80%;');
                 celda.appendChild(butn);
                 fila.appendChild(celda);
             }
@@ -203,8 +203,6 @@
         body.appendChild(tabla);
         tabla.setAttribute('class', ' table table-dark nom1');
     }
-
-
     //genera ventana flotante
     function clickchec(e) {
         const y = e.target.getAttribute('id');
@@ -215,7 +213,6 @@
         cod = y;
         cod1 = y + "," + "text";
         document.getElementById(cod1).value = "";
-
         if (document.getElementById(cod).checked == true) {
             VerCondiciones();
         } else {
@@ -224,20 +221,17 @@
         }
     };
     function VerCondiciones() {
-
         $("#myModal").modal('show');
         const btt = document.getElementById('Envia');
         const btt1 = document.getElementById('cancel');
-
         btt.addEventListener('click', fun01, {}, false);
-        btt1.addEventListener('click',cance,false);
+        btt1.addEventListener('click', cance, false);
     }
     function fun01() {
         console.log($('input:radio[name=optradio]:checked')[0].getAttribute('id'));
         fi034 = $('input:radio[name=optradio]:checked')[0].getAttribute('id');
         document.getElementById(cod1).value = fi034;
         $("#myModal").modal('hide');
-
     }
     //genera ventana flotante
     function scanQr() {
@@ -246,22 +240,17 @@
         });
         scanner.addListener('scan', function (content) {
             console.log("Nombre: " + content);
-
             var desEnc = content;
             DesCodicade = atob(desEnc);
             //console.log(DesCodicade);
             var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
             //console.log(decrypted);
             console.log("Descode: " + decrypted.toString(CryptoJS.enc.Utf8));
-
             document.getElementById("texto").value = content;
-
             cod = content;
             console.log(cod);
             document.getElementById(cod).checked = true;
             activar(cod);
-
-
         });
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length == 1) {
@@ -277,16 +266,11 @@
             console.error(e);
         });
     }
-
-function cance(){
-    var limp = document.getElementById('texto').value;
-    console.log(limp);
-    document.getElementById(limp).checked = false;
-    document.getElementById('texto').value="";
-}
-
-
+    function cance() {
+        var limp = document.getElementById('texto').value;
+        console.log(limp);
+        document.getElementById(limp).checked = false;
+        document.getElementById('texto').value = "";
+    }
     window.addEventListener('load', comenzar, false)
-
-
 </script>

@@ -74,3 +74,9 @@
    .norma {
        min-width: 30px;
    }
+   
+   #Tabla1 {
+       display: inline-block;
+       min-width: 100px;
+       background-color: darkturquoise;
+   }
