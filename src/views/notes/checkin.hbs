@@ -3,6 +3,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
 
 
+
+<!--link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"-->
+
 <!--script src="./QRLeer/jquery.min.js"></script-->
 <script src="/JS/instascan.min.js"></script>
 
@@ -39,7 +42,7 @@
 
 
 <div class="container p-4" id="conti1">
-    <div id="myModal" class="modal fade " tabindex="-1">
+    <!--div class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog ">
             <div class="modal-content ">
                 <div class="modal-header rojo">
@@ -87,12 +90,47 @@
                 </div>
             </div>
         </div>
+    </div-->
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Modal Heading</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Modal body..
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
     </div>
+
+
+
 </div>
 
 
+{{!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> --}}
+
+{{!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> --}}
+{{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> --}}
+
 
 <script>
+    
     const tablaDiv = document.getElementById('Tabla');
     var datos = [];
     var cod = "";
@@ -106,6 +144,7 @@
         scanQr();
     }
     function carga() {
+        import('https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js');
         var str = [{}];
         str1 = "{{alum01}}";
         if (str1 == "") {
@@ -144,9 +183,9 @@
                     break;
             }
             butn = document.createTextNode(nomBtn);
-            
+
             celda.appendChild(butn);
-            celda.setAttribute('style','font-size:80%;');
+            celda.setAttribute('style', 'font-size:80%;');
             fila.appendChild(celda);
         }
         tblBody.appendChild(fila);
@@ -185,14 +224,14 @@
                         butn.setAttribute("id", jss[i].codQr + "," + "text");
                         butn.setAttribute('style', 'width:10px;height:8px');
                         butn.setAttribute('class', 'input-group mb-2 norma ');
-                        butn.setAttribute('style','width:80%;height:80%');
+                        butn.setAttribute('style', 'width:80%;height:80%');
                         //butn.setAttribute('id','cabecera')
                         //ima1.setAttribute('class', 'norma');
                         //ima1.setAttribute('disabled', "disabled");
                         //butn.appendChild(ima1);
                         break;
                 }
-                celda.setAttribute('style','font-size:80%; width:80%;height:10%;text-align: center"');
+                celda.setAttribute('style', 'font-size:80%; width:80%;height:10%;text-align: center"');
                 celda.appendChild(butn);
                 fila.appendChild(celda);
             }
@@ -220,11 +259,17 @@
         }
     };
     function VerCondiciones() {
-        $("#myModal").modal('show');
-        const btt = document.getElementById('Envia');
-        const btt1 = document.getElementById('cancel');
-        btt.addEventListener('click', fun01, {}, false);
-        btt1.addEventListener('click', cance, false);
+        
+        console.log($("#myModal"));
+        var mod = $("#myModal");
+        mod.modal('show');
+
+
+        //$("#myModal").modal('show');
+        //const btt = document.getElementById('Envia');
+        //const btt1 = document.getElementById('cancel');
+        //btt.addEventListener('click', fun01, {}, false);
+        //btt1.addEventListener('click', cance, false);
     }
     function fun01() {
         console.log($('input:radio[name=optradio]:checked')[0].getAttribute('id'));
