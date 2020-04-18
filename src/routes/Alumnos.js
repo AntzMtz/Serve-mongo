@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const qrcode = require('qrcode');
 
-router.get('/Alumnos/add', isLoggedIn, async (req, res) => {
+router.get('/Alumnos/add', isLoggedIn, async(req, res) => {
     json01 = []
     materias = await Mat1.aggregate([{ $group: { _id: "$Nombre", entries: { $push: "$Grado" } } }])
 
@@ -21,7 +21,7 @@ router.get('/Alumnos/add', isLoggedIn, async (req, res) => {
 
 });
 
-router.post('/Alumnos/add', isLoggedIn, async (req, res) => {
+router.post('/Alumnos/add', isLoggedIn, async(req, res) => {
     const { idAlumno, idEscuela, codQr, grupo, grado, correoTutor, nombreTutor, nombre, aPaterno, aMaterno, direccion, delegacion, estado, Texto } = req.body;
     const errors1 = [];
     const errors = [];
@@ -70,10 +70,23 @@ router.post('/Alumnos/add', isLoggedIn, async (req, res) => {
             errors1.push({ text: 'Es necesario introducir almenos una materia ' })
         }
 
+        console.log(Texto);
 
         const newAlum = new alumno({
-            idAlumno, idEscuela, codQr, grado, grupo, correoTutor, nombreTutor, 
-            nombre, aPaterno, aMaterno, direccion, delegacion, estado, materias:JSON.parse(Texto)
+            idAlumno,
+            idEscuela,
+            codQr,
+            grado,
+            grupo,
+            correoTutor,
+            nombreTutor,
+            nombre,
+            aPaterno,
+            aMaterno,
+            direccion,
+            delegacion,
+            estado,
+            materias: JSON.parse(Texto)
         });
         await newAlum.save();
         const path3 = path1.join(__dirname, '../', 'imagu/');
@@ -90,7 +103,7 @@ router.post('/Alumnos/add', isLoggedIn, async (req, res) => {
         } else {
             if (errors1.length > 0) {
                 var errores_dis = "";
-                errors1.forEach(function (valor, indice, array) {
+                errors1.forEach(function(valor, indice, array) {
                     if (errors1.length <= indice + 1) {
                         errores_dis += valor.text + " Favor de validar";
                     } else {
