@@ -25,7 +25,7 @@
                             {{titulo}} {{descripcion}}
                         </h3>
                     </div>
-                    {{dato}}
+
                     <form id="formu" action="/notes/checkin/{{dato}}" method="POST">
                         <div>
                             <video id="preview" width="100%" height="100%"></video>
@@ -106,8 +106,6 @@
 
 </div>
 
-
-
 <script>
 
     const tablaDiv = document.getElementById('Tabla');
@@ -124,7 +122,8 @@
         document.getElementById("Tabla").innerHTML = "";
         carga();
         scanQr();
-       
+        checin();
+
     }
     function carga() {
         import('https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js');
@@ -220,6 +219,7 @@
             }
             tblBody.appendChild(fila);
         }
+        tblBody.setAttribute('id', "bodyTTR");
         tabla.appendChild(tblBody);
         body.appendChild(tabla);
         tabla.setAttribute('class', ' table table-dark nom1');
@@ -242,7 +242,7 @@
             VerCondiciones();
         } else {
             cance();
-            console.log("No paso" + fi034);
+            
         }
     };
     function VerCondiciones() {
@@ -256,12 +256,12 @@
         btt1.addEventListener('click', cance, false);
     }
     function fun01() {
-        console.log($('input:radio[name=optradio]:checked')[0].getAttribute('id'));
+        
         fi034 = $('input:radio[name=optradio]:checked')[0].getAttribute('id');
         document.getElementById(cod1).value = fi034;
 
-        datos.push({ "id": cod,"calif": fi034});
-        document.getElementById('posteo').value = JSON.stringify(datos) ;
+        datos.push({ "id": cod, "calif": fi034 });
+        document.getElementById('posteo').value = JSON.stringify(datos);
         $("#myModal").modal('hide');
     }
     //Termina genera ventana flotante
@@ -271,16 +271,12 @@
             video: document.getElementById('preview')
         });
         scanner.addListener('scan', function (content) {
-            console.log("Nombre: " + content);
+            
             var desEnc = content;
             DesCodicade = atob(desEnc);
-            //console.log(DesCodicade);
             var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
-            //console.log(decrypted);
-            console.log("Descode: " + decrypted.toString(CryptoJS.enc.Utf8));
             document.getElementById("texto").value = content;
             cod = content;
-            console.log(cod);
             document.getElementById(cod).checked = true;
             activar(cod);
         });
@@ -303,5 +299,33 @@
         document.getElementById(cod).checked = false;
         document.getElementById('texto').value = "";
     }
+
+    function checin() {
+        var datos = [];
+        var str = [{}];
+        str1 = "{{cal01}}";
+        var res = str1.replace(/&quot;/g, '"');
+        var jss = JSON.parse(res);
+        for (var propiedad in jss) {
+            datos.push({ IdAlumno: jss[propiedad].Idalumno, califica: jss[propiedad].calificacion });
+        }
+        var Elementos = document.getElementById('bodyTTR').childElementCount;
+        for (x = 1; x < Elementos; x++) {
+            const tbody = document.getElementById('bodyTTR').rows[x].cells[4].childNodes[0].getAttribute('id');
+            for (y = 0; y < datos.length; y++) {
+                var idalum = datos[y].IdAlumno;
+                var res1 = idalum.replace(/&#x3D;/g, '=');
+                if (res1 == tbody) {
+                    var cal033 = datos[y].califica;
+                    var docu43= document.getElementById('bodyTTR').rows[x].cells[5].childNodes[0].getAttribute('id');
+                    document.getElementById(docu43).value = cal033; 
+                    document.getElementById(res1).checked = true;
+                }
+
+            }
+        };
+    };
+
+
     window.addEventListener('load', comenzar, false)
 </script>
