@@ -24,6 +24,8 @@ router.post('/notes/newnote', isLoggedIn, async(req, res) => {
         const { titulo, descripcion, Materia, grupo } = req.body;
         var Mat1 = Materia.split(",")
         var Materia1 = [];
+        console.log(req.user);
+
         Materia1.push({ "Materia": Mat1[0], "Gardo": Mat1[1] })
         const errors = [];
         if (!titulo) {
@@ -41,7 +43,6 @@ router.post('/notes/newnote', isLoggedIn, async(req, res) => {
             })
         } else {
             const nuevaNota = new Nota({ titulo, descripcion });
-            console.log(req.user.ClaveCentro);
             nuevaNota.user = req.user.IDMaestro;
             nuevaNota.grado = Materia1;
             nuevaNota.centro = req.user.ClaveCentro;
@@ -102,43 +103,55 @@ router.get('/notes/checkin/:id', isLoggedIn, async(req, res) => {
     const mate = datosBD.grado[0].Materia;
     const { titulo, descripcion } = datosBD;
     const califica = [];
-    console.log(datosBD);
-
-
+    const grupo01 = [];
+    const al03 = [];
     const ClaveCentro = req.user.ClaveCentro;
-    const al03 = await alumnos.find({ "idEscuela": ClaveCentro, "materias.Materia": datosBD.grado[0].Materia, "grado": datosBD.grado[0].Gardo });
-
-    console.log(datosBD.grado[0].Materia, datosBD.grado[0].Gardo, datosBD.centro, datosBD.user);
-    for (y = 0; y < al03.length; y++) {
-        console.log(al03[y].codQr);
-        const al04 = await tarea.find({
-                "idAlumnos": al03[y].codQr,
-                "idTareas": {
-                    $elemMatch: {
-                        "Materia": datosBD.grado[0].Materia,
-                        "NomTare": datosBD.titulo
-                    }
-                }
-            }, { "idTareas.Materia.$": 1 }
+    console.log(ClaveCentro);
+    console.log(datosBD);
+    console.log(req.user);
 
 
+    const al033 = await alumnos.find({ "idEscuela": ClaveCentro, "materias.Materia": datosBD.grado[0].Materia, "grado": datosBD.grado[0].Gardo });
+    console.log(al033);
 
-            //"idAlumnos": al03[y].codQr, "idTareas.Materia":  }
-
-        );
-        try {
-            console.log(al04[0].idTareas[0].caliica);
-            califica.push({ Idalumno: al03[y].codQr, calificacion: al04[0].idTareas[0].caliica })
-        } catch (error) {
-            console.log(error.message);
-
+    for (x = 0; x < req.user.Materia.length; x++) {
+        console.log("Segundo");
+        if (req.user.Materia[x].Materia == datosBD.grado[0].Materia ||
+            req.user.Materia[x].Grado == datosBD.grado[0].Gardo) {
+            console.log(req.user.Materia[x].Grupo);
+            grupo01.push({ Grupo: req.user.Materia[x].Grupo })
         }
-
-
     }
-    console.log("Paso final");
+    console.log(grupo01);
 
-    console.log(califica);
+
+    for (y = 0; y < al033.length; y++) {
+
+        for (w = 0; w < grupo01.length; w++) {
+            if (grupo01[w].Grupo == al033[y].grupo) {
+
+                const al04 = await tarea.find({
+                    "idAlumnos": al033[y].codQr,
+                    "idTareas": {
+                        $elemMatch: {
+                            "Materia": datosBD.grado[0].Materia,
+                            "NomTare": datosBD.titulo
+                        }
+                    }
+                }, { "idTareas.Materia.$": 1 });
+
+                try {
+                    califica.push({ Idalumno: al033[y].codQr, calificacion: al04[0].idTareas[0].caliica })
+
+                } catch (error) {
+                    console.log(error.message);
+                }
+                al03.push(al033[y]);
+
+            }
+        }
+    }
+    console.log(al03);
 
     const alum01 = JSON.stringify(al03);
     const cal01 = JSON.stringify(califica);
@@ -148,7 +161,6 @@ router.get('/notes/checkin/:id', isLoggedIn, async(req, res) => {
 });
 
 router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
-
     const id3 = req.params.id;
     const al03 = await Nota.findById(id3);
     const Materia = al03.grado[0].Materia;
@@ -165,10 +177,8 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
 
         const alum = JSON.parse(req.body.posteo);
         for (x = 0; x < alum.length; x++) {
-            console.log(alum[x].id);
             var alum98 = await tarea.find({ "idAlumnos": alum[x].id });
             if (alum98.length == 0) {
-                console.log("No Hay");
                 try {
                     Texto.push({
                         IdMaestro: IDMaestro,
@@ -235,7 +245,6 @@ router.get('/notes/edit/:id', isLoggedIn, async(req, res) => {
 
     const datosBD1 = await Nota.find({ "_id": dato })
     const datosBD = datosBD1[0];
-    console.log(datosBD);
     res.render('notes/editNote', { datosBD });
 });
 

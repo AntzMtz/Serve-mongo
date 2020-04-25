@@ -4,6 +4,8 @@
 
 
 
+
+
 <script src="/JS/instascan.min.js"></script>
 <div class="container p-4" id="conti">
     <div class="row">
@@ -29,7 +31,7 @@
                     <form id="formu" action="/notes/checkin/{{dato}}" method="POST">
                         <div>
                             <video id="preview" width="100%" height="100%"></video>
-                            <input type="text" value="{{texto}}" id="texto" name="texto" value="Hola">
+                            <input type="hidden" value="{{texto}}" id="texto" name="texto" value="Hola">
                         </div>
                         <div class="input-group mb-3" id="Tabla">
                         </div>
@@ -37,7 +39,7 @@
                             <button type="submit" class="btn btn-success btn-block">Guardar Tarea</button>
                         </div>
                         <div>
-                            <input type="text" name="posteo" id="posteo">
+                            <input type="hidden" name="posteo" id="posteo">
                         </div>
                     </form>
 
@@ -107,225 +109,229 @@
 </div>
 
 <script>
-
     const tablaDiv = document.getElementById('Tabla');
-    const btn45 = document.getElementById('btn45');
-    var datos = [];
-    var cod = "";
-    var jss = [];
-    var retVal = "";
-    var fi034 = "";
-    var cod1 = "";
+const btn45 = document.getElementById('btn45');
+var datos = [];
+var cod = "";
+var jss = [];
+var retVal = "";
+var fi034 = "";
+var cod1 = "";
 
-    function comenzar() {
-        //datos.push({'pagi':'{{dato}}'})
-        document.getElementById("Tabla").innerHTML = "";
-        carga();
-        scanQr();
-        checin();
+function comenzar() {
+    //datos.push({'pagi':'{{dato}}'})
+    document.getElementById("Tabla").innerHTML = "";
+    carga();
+    scanQr();
+    checin();
 
+}
+
+function carga() {
+    import ('https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js');
+    var str = [{}];
+    str1 = "{{alum01}}";
+    if (str1 == "") {
+        console.log("Vacio");
+    } else {
+        var str = str1;
+        var res = str.replace(/&quot;/g, '"');
+        var res1 = res.replace(/&#x3D;/g, '=');
+        jss = JSON.parse(res1);
+        tablaEner();
     }
-    function carga() {
-        import('https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js');
-        var str = [{}];
-        str1 = "{{alum01}}";
-        if (str1 == "") {
-            console.log("Vacio");
-        } else {
-            var str = str1;
-            var res = str.replace(/&quot;/g, '"');
-            res1 = res.replace(/&#x3D;/g, '=');
-            jss = JSON.parse(res1);
-            tablaEner();
+}
+
+function tablaEner() {
+    document.getElementById('Tabla').innerHTML = "";
+    var materia1 = "{{mate}}";
+    var body = document.getElementById('Tabla');
+    var tabla = document.createElement("table");
+    var tblBody = document.createElement("tbody");
+    var fila = document.createElement("tr");
+    var { butn, nomBtn } = "";
+
+    for (var y = 0; y < 4; y++) {
+        var celda = document.createElement("td");
+        switch (y) {
+            case 0:
+                nomBtn = "Nombre";
+                break;
+            case 1:
+                nomBtn = "Paterno";
+                break;
+            case 2:
+                nomBtn = "Materno";
+                break;
+            case 3:
+                nomBtn = "Grado";
+                break;
         }
-    }
-    function tablaEner() {
-        document.getElementById('Tabla').innerHTML = "";
-        var materia1 = "{{mate}}";
-        var body = document.getElementById('Tabla');
-        var tabla = document.createElement("table");
-        var tblBody = document.createElement("tbody");
-        var fila = document.createElement("tr");
-        var { butn, nomBtn } = "";
+        butn = document.createTextNode(nomBtn);
 
-        for (var y = 0; y < 4; y++) {
-            var celda = document.createElement("td");
-            switch (y) {
+        celda.appendChild(butn);
+        celda.setAttribute('style', 'font-size:80%;');
+        fila.appendChild(celda);
+    }
+    tblBody.appendChild(fila);
+    for (var i = 0; i < jss.length; i++) {
+        fila = document.createElement("tr");
+        for (var j = 0; j < 6; j++) {
+            celda = document.createElement("td");
+            switch (j) {
                 case 0:
-                    nomBtn = "Nombre";
+                    butn = document.createTextNode(jss[i].nombre);
                     break;
                 case 1:
-                    nomBtn = "Paterno";
+                    butn = document.createTextNode(jss[i].aPaterno);
                     break;
                 case 2:
-                    nomBtn = "Materno";
+                    butn = document.createTextNode(jss[i].aMaterno);
                     break;
                 case 3:
-                    nomBtn = "Grado";
+                    butn = document.createTextNode(jss[i].grado + jss[i].grupo);
+                    break;
+                case 4:
+                    butn = document.createElement('input');
+                    //butn.setAttribute('class', 'input-group mb-2 nom1')
+                    butn.setAttribute("id", jss[i].codQr);
+                    //var ima = document.createElement('input');
+                    butn.setAttribute("type", "checkbox")
+                    butn.setAttribute("id", jss[i].codQr);
+
+                    //butn.appendChild(ima);
+                    butn.addEventListener("click", clickchec, false);
+                    break;
+                case 5:
+                    butn = document.createElement('input');
+                    //var ima1 = document.createElement('input');
+                    //ima1.setAttribute("type", "text");
+                    butn.setAttribute("id", jss[i].codQr + "," + "text");
+                    butn.setAttribute('style', 'width:10px;height:8px');
+                    butn.setAttribute('class', 'input-group mb-2 norma ');
+                    butn.setAttribute('style', 'width:80%;height:80%');
+                    //butn.setAttribute('id','cabecera')
+                    //ima1.setAttribute('class', 'norma');
+                    butn.setAttribute('disabled', "disabled");
+                    //butn.appendChild(ima1);
                     break;
             }
-            butn = document.createTextNode(nomBtn);
-
+            celda.setAttribute('style', 'font-size:80%; width:80%;height:10%;text-align: center"');
             celda.appendChild(butn);
-            celda.setAttribute('style', 'font-size:80%;');
             fila.appendChild(celda);
         }
         tblBody.appendChild(fila);
-        for (var i = 0; i < jss.length; i++) {
-            fila = document.createElement("tr");
-            for (var j = 0; j < 6; j++) {
-                celda = document.createElement("td");
-                switch (j) {
-                    case 0:
-                        butn = document.createTextNode(jss[i].nombre);
-                        break;
-                    case 1:
-                        butn = document.createTextNode(jss[i].aPaterno);
-                        break;
-                    case 2:
-                        butn = document.createTextNode(jss[i].aMaterno);
-                        break;
-                    case 3:
-                        butn = document.createTextNode(jss[i].grado + jss[i].grupo);
-                        break;
-                    case 4:
-                        butn = document.createElement('input');
-                        //butn.setAttribute('class', 'input-group mb-2 nom1')
-                        butn.setAttribute("id", jss[i].codQr);
-                        //var ima = document.createElement('input');
-                        butn.setAttribute("type", "checkbox")
-                        butn.setAttribute("id", jss[i].codQr);
+    }
+    tblBody.setAttribute('id', "bodyTTR");
+    tabla.appendChild(tblBody);
+    body.appendChild(tabla);
+    tabla.setAttribute('class', ' table table-dark nom1');
 
-                        //butn.appendChild(ima);
-                        butn.addEventListener("click", clickchec, false);
-                        break;
-                    case 5:
-                        butn = document.createElement('input');
-                        //var ima1 = document.createElement('input');
-                        //ima1.setAttribute("type", "text");
-                        butn.setAttribute("id", jss[i].codQr + "," + "text");
-                        butn.setAttribute('style', 'width:10px;height:8px');
-                        butn.setAttribute('class', 'input-group mb-2 norma ');
-                        butn.setAttribute('style', 'width:80%;height:80%');
-                        //butn.setAttribute('id','cabecera')
-                        //ima1.setAttribute('class', 'norma');
-                        //ima1.setAttribute('disabled', "disabled");
-                        //butn.appendChild(ima1);
-                        break;
-                }
-                celda.setAttribute('style', 'font-size:80%; width:80%;height:10%;text-align: center"');
-                celda.appendChild(butn);
-                fila.appendChild(celda);
-            }
-            tblBody.appendChild(fila);
-        }
-        tblBody.setAttribute('id', "bodyTTR");
-        tabla.appendChild(tblBody);
-        body.appendChild(tabla);
-        tabla.setAttribute('class', ' table table-dark nom1');
 
+}
+
+
+//genera ventana flotante
+function clickchec(e) {
+    const y = e.target.getAttribute('id');
+    activar(y);
+};
+
+function activar(y) {
+    fi034 = "";
+    cod = y;
+    cod1 = y + "," + "text";
+    document.getElementById(cod1).value = "";
+    if (document.getElementById(cod).checked == true) {
+        VerCondiciones();
+    } else {
+        cance();
 
     }
+};
 
+function VerCondiciones() {
 
-    //genera ventana flotante
-    function clickchec(e) {
-        const y = e.target.getAttribute('id');
-        activar(y);
-    };
-    function activar(y) {
-        fi034 = "";
-        cod = y;
-        cod1 = y + "," + "text";
-        document.getElementById(cod1).value = "";
-        if (document.getElementById(cod).checked == true) {
-            VerCondiciones();
+    $('#myModal').modal({ keyboard: true }) // initialized with no keyboard
+
+    //$("#myModal").modal('show');
+    const btt = document.getElementById('Envia');
+    const btt1 = document.getElementById('cancel');
+    btt.addEventListener('click', fun01, {}, false);
+    btt1.addEventListener('click', cance, false);
+}
+
+function fun01() {
+
+    fi034 = $('input:radio[name=optradio]:checked')[0].getAttribute('id');
+    document.getElementById(cod1).value = fi034;
+
+    datos.push({ "id": cod, "calif": fi034 });
+    document.getElementById('posteo').value = JSON.stringify(datos);
+    $("#myModal").modal('hide');
+}
+//Termina genera ventana flotante
+
+function scanQr() {
+    let scanner = new Instascan.Scanner({
+        video: document.getElementById('preview')
+    });
+    scanner.addListener('scan', function(content) {
+
+        var desEnc = content;
+        DesCodicade = atob(desEnc);
+        var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
+        document.getElementById("texto").value = content;
+        cod = content;
+        document.getElementById(cod).checked = true;
+        activar(cod);
+    });
+    Instascan.Camera.getCameras().then(function(cameras) {
+        if (cameras.length == 1) {
+            scanner.start(cameras[0]);
+        } else if (cameras.length > 1) {
+            scanner.mirror = false;
+            scanner.start(cameras[1]);
         } else {
-            cance();
-            
+            console.error('No cameras found.');
+        }
+    }).catch(function(e) {
+        console.error(e);
+    });
+}
+
+function cance() {
+    var limp = cod + "," + "text";
+    document.getElementById(cod).checked = false;
+    document.getElementById('texto').value = "";
+}
+
+function checin() {
+    var datos = [];
+    var str = [{}];
+    str1 = "{{cal01}}";
+    var res = str1.replace(/&quot;/g, '"');
+    var jss = JSON.parse(res);
+    for (var propiedad in jss) {
+        datos.push({ IdAlumno: jss[propiedad].Idalumno, califica: jss[propiedad].calificacion });
+    }
+    var Elementos = document.getElementById('bodyTTR').childElementCount;
+    for (x = 1; x < Elementos; x++) {
+        const tbody = document.getElementById('bodyTTR').rows[x].cells[4].childNodes[0].getAttribute('id');
+        for (y = 0; y < datos.length; y++) {
+            var idalum = datos[y].IdAlumno;
+            var res1 = idalum.replace(/&#x3D;/g, '=');
+            if (res1 == tbody) {
+                var cal033 = datos[y].califica;
+                var docu43 = document.getElementById('bodyTTR').rows[x].cells[5].childNodes[0].getAttribute('id');
+                document.getElementById(docu43).value = cal033;
+                document.getElementById(res1).checked = true;
+            }
+
         }
     };
-    function VerCondiciones() {
-
-        $('#myModal').modal({ keyboard: true })   // initialized with no keyboard
-
-        //$("#myModal").modal('show');
-        const btt = document.getElementById('Envia');
-        const btt1 = document.getElementById('cancel');
-        btt.addEventListener('click', fun01, {}, false);
-        btt1.addEventListener('click', cance, false);
-    }
-    function fun01() {
-        
-        fi034 = $('input:radio[name=optradio]:checked')[0].getAttribute('id');
-        document.getElementById(cod1).value = fi034;
-
-        datos.push({ "id": cod, "calif": fi034 });
-        document.getElementById('posteo').value = JSON.stringify(datos);
-        $("#myModal").modal('hide');
-    }
-    //Termina genera ventana flotante
-
-    function scanQr() {
-        let scanner = new Instascan.Scanner({
-            video: document.getElementById('preview')
-        });
-        scanner.addListener('scan', function (content) {
-            
-            var desEnc = content;
-            DesCodicade = atob(desEnc);
-            var decrypted = CryptoJS.AES.decrypt(DesCodicade, "");
-            document.getElementById("texto").value = content;
-            cod = content;
-            document.getElementById(cod).checked = true;
-            activar(cod);
-        });
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length == 1) {
-                scanner.start(cameras[0]);
-            } else if (cameras.length > 1) {
-                scanner.mirror = false;
-                scanner.start(cameras[1]);
-            }
-            else {
-                console.error('No cameras found.');
-            }
-        }).catch(function (e) {
-            console.error(e);
-        });
-    }
-    function cance() {
-        var limp = cod + "," + "text";
-        document.getElementById(cod).checked = false;
-        document.getElementById('texto').value = "";
-    }
-
-    function checin() {
-        var datos = [];
-        var str = [{}];
-        str1 = "{{cal01}}";
-        var res = str1.replace(/&quot;/g, '"');
-        var jss = JSON.parse(res);
-        for (var propiedad in jss) {
-            datos.push({ IdAlumno: jss[propiedad].Idalumno, califica: jss[propiedad].calificacion });
-        }
-        var Elementos = document.getElementById('bodyTTR').childElementCount;
-        for (x = 1; x < Elementos; x++) {
-            const tbody = document.getElementById('bodyTTR').rows[x].cells[4].childNodes[0].getAttribute('id');
-            for (y = 0; y < datos.length; y++) {
-                var idalum = datos[y].IdAlumno;
-                var res1 = idalum.replace(/&#x3D;/g, '=');
-                if (res1 == tbody) {
-                    var cal033 = datos[y].califica;
-                    var docu43= document.getElementById('bodyTTR').rows[x].cells[5].childNodes[0].getAttribute('id');
-                    document.getElementById(docu43).value = cal033; 
-                    document.getElementById(res1).checked = true;
-                }
-
-            }
-        };
-    };
+};
 
 
-    window.addEventListener('load', comenzar, false)
+window.addEventListener('load', comenzar, false)
 </script>
