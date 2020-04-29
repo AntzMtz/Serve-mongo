@@ -10,11 +10,11 @@ router.get('/Mestro/NewClass', isLoggedIn, (req, res) => {
     res.render('Maestro/newClass')
 });
 
-router.get('/Mestro/NewWorkHome', isLoggedIn, (req, res) => {
-    res.render('Maestro/newWorkHome')
+router.get('/Mestro/NewHomeWork', isLoggedIn, (req, res) => {
+    res.render('Maestro/newHomeWork')
 });
 
-router.post('/notes', isLoggedIn, async (req, res) => {
+router.post('/notes', isLoggedIn, async(req, res) => {
 
     fechas = JSON.parse(req.body.Nuevo);
     fecha34 = fechas;
@@ -35,15 +35,17 @@ router.post('/notes', isLoggedIn, async (req, res) => {
     })
 });
 
-router.post('/Mestro/NewClass', isLoggedIn, async (req, res) => {
+router.post('/Mestro/NewClass', isLoggedIn, async(req, res) => {
 
-    const { nombre, grado} = req.body;
+    const { nombre, grado } = req.body;
     const { ClaveCentro } = req.user;
 
     try {
         const newClass = new clase({
-            
-            Nombre: nombre, Grado: grado,  ClaveCentro: ClaveCentro
+
+            Nombre: nombre,
+            Grado: grado,
+            ClaveCentro: ClaveCentro
         });
         await newClass.save();
         res.redirect('/Maestro')

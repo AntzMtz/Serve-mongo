@@ -1,0 +1,26 @@
+<div class="row">
+    {{#each datos}}
+    <div id="Cuad" class="col-md-3 ">
+        <div class="card">
+            <div class="card-body">
+                {{!-- {{Grupo}} --}}
+                <h4 class="card-title d-flex justify-content-between align-items-center">
+                    {{materia}}
+                    {{!-- <a href="/notes/edit/{{Grado}}"><i class="fas fa-pencil-alt"></i></a> --}}
+                </h4>
+                <hr class="m-1">
+                <h6 class="card-title d-flex justify-content-between align-items-center">
+                    Grado: {{grado}}
+                </h6>
+                <hr class="m-1">
+                <form action="/Alumnos/alumnoCal/{{materia}},{{grado}}" method="GET">
+                    {{!-- <input type="text" name="_method" value="DELETE"> --}}
+                    <button type="submit" class="btn btn-danger btn-block btn-sm">Delete</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {{/each}}
+</div>

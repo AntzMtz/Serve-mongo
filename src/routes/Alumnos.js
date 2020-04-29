@@ -4,6 +4,7 @@ const path1 = require('path');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 const alumno = require('../models/alumno');
 const Mat1 = require('../models/Mat01');
+const tarea = require('../models/tareas');
 const fs = require('fs');
 
 const qrcode = require('qrcode');
@@ -15,10 +16,58 @@ router.get('/Alumnos/add', isLoggedIn, async(req, res) => {
     for (var i = 0; i < materias.length; i++) {
         json01.push(JSON.stringify(materias[i]));
     }
-    console.log(materias);
 
     res.render('Alumno/alumnosAdd.hbs', { materias, json01 });
 
+});
+
+router.get('/Alumnos/alumnoCal/:materia,:grado', isLoggedIn, async(req, res) => {
+    json01 = [];
+    Alumnos01 = [];
+    var mater = req.user.Materia;
+    var materia = req.params.materia;
+    var grado = req.params.grado;
+    for (m = 0; m < mater.length; m++) {
+        if (mater[m].Materia == req.params.materia && mater[m].Grado == req.params.grado) {
+            json01.push({ "grupo": mater[m].Grupo });
+        }
+    }
+
+    const alumnos = await alumno.find({ "idEscuela": req.user.ClaveCentro, "materias.Materia": materia, "grado": grado });
+    for (m = 0; m < alumnos.length; m++) {
+        for (n = 0; n < json01.length; n++) {
+            if (alumnos[m].grupo == json01[n].grupo) {
+                Alumnos01.push(alumnos[m])
+            }
+        }
+    }
+    var alu05 = [];
+    var alu06 = [];
+    for (o = 0; o < Alumnos01.length; o++) {
+        const materAlum = await tarea.find({ "idAlumnos": Alumnos01[o].codQr });
+        var nom = Alumnos01[o].nombre + " " + Alumnos01[o].aPaterno + " " + Alumnos01[o].aMaterno;
+        alu05.push({ "Nombre": nom });
+        var idmate = materAlum[0].idTareas;
+        var mate = "";
+        for (p = 0; p < idmate.length; p++) {
+            if (idmate[p].Materia == materia) {
+
+                alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].caliica });
+            }
+        }
+        alu06.push(alu05);
+        alu05 = [];
+    }
+    console.log("alu06");
+    console.log(alu06);
+    var Json01 = JSON.stringify(alu06);
+    var Json02 = JSON.parse(Json01);
+
+    console.log("por aqui");
+
+    console.log(Json02[0]);
+
+    res.render('Alumno/viewAlumno', { Json01, materia, grado });
 });
 
 router.post('/Alumnos/add', isLoggedIn, async(req, res) => {
@@ -69,9 +118,6 @@ router.post('/Alumnos/add', isLoggedIn, async(req, res) => {
         if (Texto.length < 1 || Texto == "{}" || Texto == "[]") {
             errors1.push({ text: 'Es necesario introducir almenos una materia ' })
         }
-
-        console.log(Texto);
-
         const newAlum = new alumno({
             idAlumno,
             idEscuela,
@@ -115,7 +161,7 @@ router.post('/Alumnos/add', isLoggedIn, async(req, res) => {
                 errors.push({ text: "El error es: " + error });
             }
         }
-        console.log("Error: " + error);
+
         res.render('Alumno/alumnosAdd.hbs', {
             idAlumno,
             idEscuela,

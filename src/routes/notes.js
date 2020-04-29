@@ -6,6 +6,46 @@ const tarea = require('../models/tareas');
 var moment = require('moment');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
+router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
+
+    try {
+        var datos = [];
+        var materia = "";
+        var grado = "";
+        const mate01 = req.user.Materia;
+        mate01.sort(function(a, b) {
+            return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
+        });
+        // console.log(mate01);
+        var llave1 = "";
+        for (x = 0; x < mate01.length; x++) {
+            var llave = mate01[x].Materia + mate01[x].Grado;
+
+            if (llave != llave1) {
+                datos.push({ "llave": mate01[x].Materia + mate01[x].Grado, "materia": mate01[x].Materia, "grado": mate01[x].Grado });
+                llave1 = mate01[x].Materia + mate01[x].Grado;
+            }
+
+        }
+        res.render('notes/viewMateria', { datos });
+    } catch (error) {
+        req.flash('error_ms', error.message)
+        console.log(error);
+
+        res.redirect('/');
+    }
+    // try {
+    //     const mate01 = req.user.Materia;
+    //     res.render('notes/newnote', {
+    //         fechas,
+    //         mate01
+    //     });
+    // } catch (error) {
+    //     req.flash('error_ms', error.message)
+    //     res.redirect('/notes');
+    // }
+});
+
 router.get('/notes/add', isLoggedIn, (req, res) => {
     try {
         const mate01 = req.user.Materia;

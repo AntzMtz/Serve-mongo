@@ -1,0 +1,129 @@
+<div class="container p-4" id="conti">
+    <div class="row">
+        <div class="col-md-7 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>
+                        Tareas de {{materia}} en el Grado {{grado}}
+                    </h3>
+                </div>
+                <div class="card-boddy">
+                    <img id="login" src="/imagen/clase.jpg" alt="logo Antz"
+                        class="card-img-top mx-auto m-2 rounded-circle w-10">
+                    <form action="/Alumnos/add" method="POST" enctype="multipart/form-data">
+                        <div id="tabla">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+    var tarefin = [];
+    function comezar() {
+        var str = [{}];
+        str1 = "{{Json01}}";
+        if (str1 == "") {
+            console.log("Vacio");
+        } else {
+            var str = str1;
+            var res = str.replace(/&quot;/g, '"');
+            var res1 = res.replace(/&#x3D;/g, '=');
+            jss = JSON.parse(res1);
+
+        }
+        materia();
+        tablaAlum();
+    }
+
+    function materia() {
+        var materi = [];
+        for (x = 0; x < jss.length; x++) {
+            for (y = 0; y < jss[x].length; y++) {
+                if (y == 0) {
+                    //console.log(jss[x][y].Nombre)
+                } else {
+                    // console.log(jss[x][y].NomTare)
+                    materi.push({ nombre: jss[x][y].NomTare })
+                    // console.log(jss[x][y].calificacion)
+                }
+                //for (var key in jss[x][y]) {
+                //    console.log("quien")
+                //    console.log(key);
+                //}
+            }
+        }
+        materi.sort(function (a, b) {
+            return (a.nombre).localeCompare((b.nombre));
+        });
+        var tare = "";
+
+        for (x = 0; x < materi.length; x++) {
+            if (materi[x].nombre != tare) {
+                tarefin.push({ materia: materi[x].nombre })
+                tare = materi[x].nombre;
+            }
+        }
+        console.log(tarefin);
+
+    }
+
+    function tablaAlum() {
+        document.getElementById('tabla').innerHTML = "";
+        var body = document.getElementById('tabla');
+        var tabla = document.createElement("table");
+        var tblBody = document.createElement("tbody");
+        var fila = document.createElement("tr");
+        console.log(tarefin.length);
+        for (var y = 0; y < (tarefin.length + 4); y++) {
+            var celda = document.createElement("td");
+            if (y == 0) {
+                var butn = document.createTextNode("Alumno ");
+            } else {
+                if (y == (tarefin.length + 1)) {
+                    var butn = document.createTextNode("Calificación");
+                } else {
+                    if (y == (tarefin.length + 2)) {
+                        var butn = document.createTextNode("+ Puntos");
+                    } else {
+                        if (y == (tarefin.length + 3)) {
+                            var butn = document.createTextNode("Final");
+                        } else {
+                            console.log(y - 1);
+                            var butn = document.createTextNode(tarefin[y - 1].materia);
+                        }
+                    }
+                }
+
+            }
+            celda.appendChild(butn);
+            fila.appendChild(celda);
+        }
+        tblBody.appendChild(fila);
+        tblBody.setAttribute('id', "bodyTTR");
+        
+        tabla.appendChild(tblBody);
+        body.appendChild(tabla);
+        tabla.setAttribute('class', ' table table-dark nom1');
+
+
+
+
+
+    }
+
+    window.addEventListener('load', comezar, false)
+
+
+
+</script>
