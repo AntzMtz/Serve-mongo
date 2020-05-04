@@ -21,18 +21,13 @@
     </div>
 </div>
 
-
-
-
-
-
-
-
 <script>
     var tarefin = [];
+    var jsonObj = [];
     function comezar() {
         var str = [{}];
         str1 = "{{Json01}}";
+
         if (str1 == "") {
             console.log("Vacio");
         } else {
@@ -42,25 +37,21 @@
             jss = JSON.parse(res1);
 
         }
+
         materia();
         tablaAlum();
     }
 
     function materia() {
         var materi = [];
+
         for (x = 0; x < jss.length; x++) {
             for (y = 0; y < jss[x].length; y++) {
                 if (y == 0) {
-                    //console.log(jss[x][y].Nombre)
+
                 } else {
-                    // console.log(jss[x][y].NomTare)
-                    materi.push({ nombre: jss[x][y].NomTare })
-                    // console.log(jss[x][y].calificacion)
+                    materi.push({ nombre: jss[x][y].NomTare, fecha: jss[x][y].fecha })
                 }
-                //for (var key in jss[x][y]) {
-                //    console.log("quien")
-                //    console.log(key);
-                //}
             }
         }
         materi.sort(function (a, b) {
@@ -70,25 +61,73 @@
 
         for (x = 0; x < materi.length; x++) {
             if (materi[x].nombre != tare) {
-                tarefin.push({ materia: materi[x].nombre })
+                tarefin.push({ materia: materi[x].nombre, fecha: materi[x].fecha })
                 tare = materi[x].nombre;
             }
         }
-        console.log(tarefin);
+
+        tarefin.sort(function (a, b) {
+            return (a.fecha).localeCompare((b.fecha));
+        });
+
+        var mateFin = "";
+        var mate1 = []
+        for (var y = 0; y < jss.length; y++) {
+            mateFin += "{"
+            for (var x = 0; x <= jss[y].length; x++) {
+                if (x == 0) {
+                    mateFin += '"Nombre" :' + '"' + jss[y][x].Nombre + '"';
+                } else if (x == jss[y].length) {
+                    mate1.sort(function (a, b) {
+                        return (a.fecha + a.materia).localeCompare((b.fecha + b.materia));
+                    });
+
+                    for (m = 0; m < tarefin.length; m++) {
+                        if (x != tarefin.length) {
+                            mateFin += ","
+                        }
+                        if (mate1[m].materia == tarefin[m].materia) {
+                            mateFin += '"Califica' + m + '":' + mate1[m].calificacion
+                        } else {
+                            mateFin += '"Califica' + m + '":' + "0"
+                        }
+
+                    }
+                    var mate1 = []
+                } else {
+                    mate1.push({ materia: jss[y][x].NomTare, calificacion: jss[y][x].calificacion, fecha: jss[y][x].fecha });
+                }
+            }
+            if (y == jss[y].length - 2) {
+                mateFin += "}"
+            } else {
+                mateFin += "},"
+            }
+
+
+        }
+        console.log("Lengt3")
+        console.log(mateFin);
+
+        jsonObj = $.parseJSON('[' + mateFin + ']');
+        console.log(jsonObj);
 
     }
 
     function tablaAlum() {
+        var lugar = "";
+        var lugar1 = [];
         document.getElementById('tabla').innerHTML = "";
         var body = document.getElementById('tabla');
         var tabla = document.createElement("table");
         var tblBody = document.createElement("tbody");
         var fila = document.createElement("tr");
-        console.log(tarefin.length);
+
         for (var y = 0; y < (tarefin.length + 4); y++) {
             var celda = document.createElement("td");
             if (y == 0) {
                 var butn = document.createTextNode("Alumno ");
+
             } else {
                 if (y == (tarefin.length + 1)) {
                     var butn = document.createTextNode("Calificación");
@@ -99,7 +138,16 @@
                         if (y == (tarefin.length + 3)) {
                             var butn = document.createTextNode("Final");
                         } else {
-                            console.log(y - 1);
+                            lugar += "{"
+
+                            var mate = tarefin[y - 1].materia;
+                            lugar += '"' + mate + '" : ' + (y);
+                            if (y == tarefin.length) {
+                                lugar += "}"
+                            } else {
+                                lugar += "},"
+                            }
+
                             var butn = document.createTextNode(tarefin[y - 1].materia);
                         }
                     }
@@ -109,17 +157,31 @@
             celda.appendChild(butn);
             fila.appendChild(celda);
         }
+
         tblBody.appendChild(fila);
         tblBody.setAttribute('id', "bodyTTR");
-        
+        const numer = tarefin.length + 4;
+        for (x = 0; x < jsonObj.length; x++) {
+            console.log(jsonObj[x]);
+            fila = document.createElement("tr");
+            for (m = 0; m < tarefin.length + 4; m++) {
+                var celda = document.createElement("td");
+                if(m == 0){
+                    var butn = document.createTextNode(jsonObj[x].Nombre);
+                }else{
+                    var butn = document.createTextNode("jsonObj[x].Nombre");
+                }
+                
+                celda.appendChild(butn);
+                fila.appendChild(celda);
+            }
+            tblBody.appendChild(fila);
+            tblBody.setAttribute('id', "bodyTTR");
+        }
+
         tabla.appendChild(tblBody);
         body.appendChild(tabla);
         tabla.setAttribute('class', ' table table-dark nom1');
-
-
-
-
-
     }
 
     window.addEventListener('load', comezar, false)

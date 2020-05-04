@@ -47,12 +47,16 @@ router.get('/Alumnos/alumnoCal/:materia,:grado', isLoggedIn, async(req, res) => 
         const materAlum = await tarea.find({ "idAlumnos": Alumnos01[o].codQr });
         var nom = Alumnos01[o].nombre + " " + Alumnos01[o].aPaterno + " " + Alumnos01[o].aMaterno;
         alu05.push({ "Nombre": nom });
+        console.log("Quien");
+
+        console.log(materAlum[0]);
+
         var idmate = materAlum[0].idTareas;
         var mate = "";
         for (p = 0; p < idmate.length; p++) {
             if (idmate[p].Materia == materia) {
 
-                alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].caliica });
+                alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].caliica, "fecha": idmate[p].fecha });
             }
         }
         alu06.push(alu05);
