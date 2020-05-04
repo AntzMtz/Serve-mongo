@@ -1,6 +1,9 @@
-<div class="container p-4" id="conti">
-    <div class="row">
-        <div class="col-md-7 mx-auto">
+{{!-- <div class="container p-4" id="conti">
+    <div class="row"> --}}
+<div>
+    <div>
+        <div>
+            {{!-- <div class="col-md-7 mx-auto"> --}}
             <div class="card text-center">
                 <div class="card-header">
                     <h3>
@@ -10,17 +13,17 @@
                 <div class="card-boddy">
                     <img id="login" src="/imagen/clase.jpg" alt="logo Antz"
                         class="card-img-top mx-auto m-2 rounded-circle w-10">
-                    <form action="/Alumnos/add" method="POST" enctype="multipart/form-data">
-                        <div id="tabla">
 
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<form action="/Alumnos/add" method="POST" enctype="multipart/form-data">
+    <div id="tabla">
 
+    </div>
+</form>
 <script>
     var tarefin = [];
     var jsonObj = [];
@@ -166,12 +169,12 @@
             fila = document.createElement("tr");
             for (m = 0; m < tarefin.length + 4; m++) {
                 var celda = document.createElement("td");
-                if(m == 0){
+                if (m == 0) {
                     var butn = document.createTextNode(jsonObj[x].Nombre);
-                }else{
+                } else {
                     var butn = document.createTextNode("jsonObj[x].Nombre");
                 }
-                
+
                 celda.appendChild(butn);
                 fila.appendChild(celda);
             }
