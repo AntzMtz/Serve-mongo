@@ -235,7 +235,7 @@ router.get('/notes/checkin/:id', isLoggedIn, async(req, res) => {
                 }, { "idTareas.Materia.$": 1 });
 
                 try {
-                    califica.push({ Idalumno: al033[y].codQr, calificacion: al04[0].idTareas[0].caliica })
+                    califica.push({ Idalumno: al033[y].codQr, calificacion: al04[0].idTareas[0].califica })
 
                 } catch (error) {
                     console.log(error.message);
