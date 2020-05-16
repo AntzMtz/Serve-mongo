@@ -1,28 +1,29 @@
-{{!-- <div class="container p-4" id="conti">
-    <div class="row"> --}}
-<div>
-    <div>
-        <div>
-            {{!-- <div class="col-md-7 mx-auto"> --}}
-            <div class="card text-center">
-                <div class="card-header">
-                    <h3>
-                        Tareas de {{materia}} en el Grado {{grado}}
-                    </h3>
-                </div>
-                <div class="card-boddy">
-                    <img id="login" src="/imagen/clase.jpg" alt="logo Antz"
-                        class="card-img-top mx-auto m-2 rounded-circle w-10">
-
-                </div>
-            </div>
-        </div>
+<div class="card text-center">
+    <div class="card-header">
+        <h3>
+            Tareas de {{materia}} en el Grado {{grado}}
+        </h3>
+    </div>
+    <div class="card-boddy">
+        <img id="login" src="/imagen/clase.jpg" alt="logo Antz" class="card-img-top mx-auto m-2 rounded-circle w-10">
+        {{!-- <input type="number" name="fg" id="er">
+        <input type="text" name="er" id="w"> --}}
     </div>
 </div>
-<form action="/Alumnos/add" method="POST" enctype="multipart/form-data">
+<form action="/Alumnos/add" method="GET" enctype="multipart/form-data">
+    <div id="perio" class="card text-center">
+        Selecciona un periodo
+        <select id="peri01">
+
+        </select>
+    </div>
     <div id="tabla">
 
     </div>
+    <div class="card text-center">
+        <button class="btn btn-success btn-block">guardar</button>
+    </div>
+
 </form>
 <script>
     var tarefin = [];
@@ -41,25 +42,101 @@
 
         }
 
-        materia();
+
+        opciones();
+
+
+    }
+
+    function opciones() {
+        var miSelect = document.getElementById("peri01");
+        var miOption = document.createElement("option");
+        //miOption.setAttribute("value","1");
+        miOption.text = "Selecciona un valor";
+        miOption.setAttribute('disabled', "true");
+        miOption.setAttribute('selected', "true");
+        miSelect.appendChild(miOption);
+
+
+
+        var nuevaLongitud = [];
+        for (x = 0; x < jss.length; x++) {
+
+            for (y = 0; y < jss[x].length; y++) {
+                if (y !== 0) {
+                    nuevaLongitud.push(jss[x][y].periodo);
+                }
+            }
+
+        }
+
+        nuevaLongitud.sort();
+        nuev1 = "";
+
+
+        for (var y = 0; y < nuevaLongitud.length; y++) {
+
+            if (nuev1 == nuevaLongitud[y]) {
+                nuevaLongitud.splice(y, 1)
+                y = -1;
+                nuev1 = "";
+
+            } else {
+                nuev1 = nuevaLongitud[y];
+            }
+        }
+        for (var y = 0; y < nuevaLongitud.length; y++) {
+            var miOption1 = document.createElement("option");
+            miOption1.value = nuevaLongitud[y];
+            miOption1.text = nuevaLongitud[y];
+            miSelect.appendChild(miOption1);
+        }
+
+        miSelect.addEventListener("change", valora, false);
+    }
+
+    function valora(e) {
+        var selec = e.target.value;
+
+        document.getElementById('tabla').innerHTML = "";
+        materia(selec);
         tablaAlum();
     }
 
-    function materia() {
+    function materia(selec) {
+
         var materi = [];
+        tarefin = [];
+        var nummate = 0;
+        var nummate1 = 0;
+        var tare = "";
+        var mateFin = "";
+        var mate1 = []
+
+
 
         for (x = 0; x < jss.length; x++) {
             for (y = 0; y < jss[x].length; y++) {
                 if (y == 0) {
 
                 } else {
-                    materi.push({ nombre: jss[x][y].NomTare, fecha: jss[x][y].fecha })
+                    nummate++
+                    if (selec == jss[x][y].periodo) {
+                        materi.push({ nombre: jss[x][y].NomTare, fecha: jss[x][y].fecha, periodo: jss[x][y].periodo })
+                        //tarefin.push({ materia: jss[x][y].NomTare, fecha: jss[x][y].fecha })
+                    }
+
                 }
             }
+            if (nummate1 < nummate) {
+                nummate1 = nummate
+            }
+            nummate = 0;
         }
         materi.sort(function (a, b) {
             return (a.nombre).localeCompare((b.nombre));
         });
+
         var tare = "";
 
         for (x = 0; x < materi.length; x++) {
@@ -69,51 +146,98 @@
             }
         }
 
+
+
         tarefin.sort(function (a, b) {
-            return (a.fecha).localeCompare((b.fecha));
+            return (a.fecha + a.materia).localeCompare((b.fecha + + b.materia));
         });
 
-        var mateFin = "";
-        var mate1 = []
+        var n = 0;
         for (var y = 0; y < jss.length; y++) {
             mateFin += "{"
             for (var x = 0; x <= jss[y].length; x++) {
+
                 if (x == 0) {
                     mateFin += '"Nombre" :' + '"' + jss[y][x].Nombre + '"';
                 } else if (x == jss[y].length) {
                     mate1.sort(function (a, b) {
-                        return (a.fecha + a.materia).localeCompare((b.fecha + b.materia));
+                        return (a.fecha + a.materia).localeCompare((b.fecha + + b.materia));
                     });
-
                     for (m = 0; m < tarefin.length; m++) {
-                        if (x != tarefin.length) {
+                        if (m != tarefin.length) {
                             mateFin += ","
                         }
-                        if (mate1[m].materia == tarefin[m].materia) {
-                            mateFin += '"Califica' + m + '":' + mate1[m].calificacion
-                        } else {
+                        try {
+                            if (tarefin[m].materia == mate1[n].materia) {
+                                mateFin += '"Califica' + m + '":' + mate1[n].calificacion
+                                n++
+
+                            } else {
+                                mateFin += '"Califica' + m + '":' + "0"
+                            }
+                        } catch (error) {
                             mateFin += '"Califica' + m + '":' + "0"
                         }
-
                     }
-                    var mate1 = []
-                } else {
+
+                } else if (jss[y][x].periodo == selec) {
+
                     mate1.push({ materia: jss[y][x].NomTare, calificacion: jss[y][x].calificacion, fecha: jss[y][x].fecha });
                 }
             }
-            if (y == jss[y].length - 2) {
+            if (y == jss.length - 1) {
                 mateFin += "}"
             } else {
                 mateFin += "},"
             }
+            n = 0;
+            mate1 = [];
 
 
         }
-        console.log("Lengt3")
-        console.log(mateFin);
+        
+
+
+        //for (var y = 0; y < jss.length; y++) {
+        //    mateFin += "{"
+        //    for (var x = 0; x <= jss[y].length; x++) {
+        //        if (x == 0) {
+        //            mateFin += '"Nombre" :' + '"' + jss[y][x].Nombre + '"';
+        //            console.log("jss[y].length")
+        //          console.log(jss[y].length)
+        //    } else if (x == jss[y].length) {
+        //      mate1.sort(function (a, b) {
+        //        return (a.fecha + a.materia).localeCompare((b.fecha + b.materia));
+        //  });
+        //            console.log("Mate1")
+        //            console.log(mate1);
+        //            for (m = 0; m < tarefin.length; m++) {
+
+        //                        if (x != tarefin.length) {
+        //                          mateFin += ","
+        //                    }
+        //                  if (mate1[m].materia == tarefin[m].materia) {
+        //                    mateFin += '"Califica' + m + '":' + mate1[m].calificacion
+        //              } else {
+        //                mateFin += '"Califica' + m + '":' + "0"
+        //          }
+        //
+        //                  }
+        //                var mate1 = []
+        //          } else {
+        //            mate1.push({ materia: jss[y][x].NomTare, calificacion: jss[y][x].calificacion, fecha: jss[y][x].fecha });
+        //      }
+        //}
+        //            if (y == jss.length - 1) {
+        //                mateFin += "}"
+        //            } else {
+        //                mateFin += "},"
+        //            }
+
+
+        //        }
 
         jsonObj = $.parseJSON('[' + mateFin + ']');
-        console.log(jsonObj);
 
     }
 
@@ -165,14 +289,54 @@
         tblBody.setAttribute('id', "bodyTTR");
         const numer = tarefin.length + 4;
         for (x = 0; x < jsonObj.length; x++) {
-            console.log(jsonObj[x]);
+
             fila = document.createElement("tr");
+            var calfin = 0;
             for (m = 0; m < tarefin.length + 4; m++) {
                 var celda = document.createElement("td");
                 if (m == 0) {
                     var butn = document.createTextNode(jsonObj[x].Nombre);
                 } else {
-                    var butn = document.createTextNode("jsonObj[x].Nombre");
+                    if (m == tarefin.length + 3) {
+                        //var butn = document.createTextNode("cali fin");
+                        var butn = document.createElement("input");
+                        butn.setAttribute('id', jsonObj[x].Nombre + "califin");
+                        butn.setAttribute('class', "check3");
+
+                        //butn.addEventListener("keyup", clafin, false);
+                        butn.setAttribute("disabled", "disabled")
+                        butn.setAttribute('value', calfin);
+
+                    } else {
+                        if (m == tarefin.length + 2) {
+                            var butn = document.createElement("input");
+                            butn.setAttribute('id', jsonObj[x].Nombre);
+                            //butn.setAttribute('type',"number")
+                            butn.setAttribute('class', "check3");
+                            butn.addEventListener("keyup", clafin, false);
+
+                        } else {
+                            if (m == tarefin.length + 1) {
+                                calfin = calfin / tarefin.length
+
+                                var butn = document.createElement("input");
+                                butn.setAttribute("disabled", "disabled")
+
+                                butn.setAttribute('value', calfin);
+                                butn.setAttribute('class', "check3");
+                                butn.setAttribute('id', jsonObj[x].Nombre + "califi")
+                            } else {
+                                var cal = "Califica" + (m - 1);
+
+                                calfin = (calfin + jsonObj[x][cal])
+
+                                var butn = document.createTextNode(jsonObj[x][cal]);
+                            }
+
+                        }
+
+                    }
+
                 }
 
                 celda.appendChild(butn);
@@ -187,6 +351,25 @@
         tabla.setAttribute('class', ' table table-dark nom1');
     }
 
+
+    function clafin(e) {
+        const y = e.target.getAttribute('id');
+        const m = document.getElementById(y + "califi")
+
+        var x = document.getElementById(y).value;
+        if (x === "" || x === null) {
+            var calfinn = parseFloat(m.value);
+        } else {
+            var calfinn = parseFloat(m.value) + parseFloat(x);
+        }
+        if (calfinn > 10) {
+            document.getElementById(y + "califin").value = 10;
+        } else {
+            document.getElementById(y + "califin").value = calfinn;
+        }
+
+
+    }
     window.addEventListener('load', comezar, false)
 
 

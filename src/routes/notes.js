@@ -6,6 +6,82 @@ const tarea = require('../models/tareas');
 var moment = require('moment');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
+// router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
+
+//     try {
+//         var datos = [];
+//         var materia = "";
+//         var grado = "";
+//         const mate01 = req.user.Materia;
+//         mate01.sort(function(a, b) {
+//             return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
+//         });
+//         // console.log(mate01);
+//         var llave1 = "";
+//         for (x = 0; x < mate01.length; x++) {
+//             var llave = mate01[x].Materia + mate01[x].Grado;
+
+//             if (llave != llave1) {
+//                 datos.push({ "llave": mate01[x].Materia + mate01[x].Grado, "materia": mate01[x].Materia, "grado": mate01[x].Grado });
+//                 llave1 = mate01[x].Materia + mate01[x].Grado;
+//             }
+
+//         }
+//         res.render('notes/viewMateria', { datos });
+//     } catch (error) {
+//         req.flash('error_ms', error.message)
+//         console.log(error);
+
+//         res.redirect('/');
+//     }
+//     // try {
+//     //     const mate01 = req.user.Materia;
+//     //     res.render('notes/newnote', {
+//     //         fechas,
+//     //         mate01
+//     //     });
+//     // } catch (error) {
+//     //     req.flash('error_ms', error.message)
+//     //     res.redirect('/notes');
+//     // }
+// });
+
+router.get('/notes/add', isLoggedIn, (req, res) => {
+    try {
+        const mate02 = req.user.Materia;
+        console.log(mate02);
+        mate02.sort(function(a, b) {
+            return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
+        });
+        console.log(mate02);
+        const mate01 = [];
+        var { materia, grado } = "";
+        for (x = 0; x < mate02.length; x++) {
+            console.log(mate02[x].Materia);
+            if (materia != mate02[x].Materia || grado != mate02[x].Grado) {
+                console.log("no igual");
+                materia = mate02[x].Materia;
+                grado = mate02[x].Grado;
+                mate01.push({ Materia: mate02[x].Materia, Grado: mate02[x].Grado })
+
+            } else {
+                console.log("igual");
+
+            }
+
+        }
+        console.log(mate01);
+
+        res.render('notes/newnote', {
+            fechas,
+            mate01
+        });
+    } catch (error) {
+        req.flash('error_ms', error.message)
+        res.redirect('/notes');
+    }
+});
+
 router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
 
     try {
@@ -34,55 +110,41 @@ router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
 
         res.redirect('/');
     }
-    // try {
-    //     const mate01 = req.user.Materia;
-    //     res.render('notes/newnote', {
-    //         fechas,
-    //         mate01
-    //     });
-    // } catch (error) {
-    //     req.flash('error_ms', error.message)
-    //     res.redirect('/notes');
-    // }
-});
-
-router.get('/notes/add', isLoggedIn, (req, res) => {
-    try {
-        const mate01 = req.user.Materia;
-        res.render('notes/newnote', {
-            fechas,
-            mate01
-        });
-    } catch (error) {
-        req.flash('error_ms', error.message)
-        res.redirect('/notes');
-    }
 });
 
 router.post('/notes/newnote', isLoggedIn, async(req, res) => {
     try {
-        const { titulo, descripcion, Materia, grupo } = req.body;
-        var Mat1 = Materia.split(",")
-        var Materia1 = [];
-        console.log(req.user);
-
-        Materia1.push({ "Materia": Mat1[0], "Gardo": Mat1[1] })
+        const { titulo, descripcion, Materia, grupo, periodo } = req.body;
         const errors = [];
+
+        if (Materia) {
+            var Mat1 = Materia.split(",")
+            var Materia1 = [];
+            console.log(req.user);
+            Materia1.push({ "Materia": Mat1[0], "Gardo": Mat1[1] })
+        } else {
+            errors.push({ text: 'Porfavor escribe un Periodo' });
+        }
+
         if (!titulo) {
             errors.push({ text: 'Porfavor escribe un titulo' });
         }
         if (!descripcion) {
             errors.push({ text: 'Porfavor escribe una descripción' });
         }
+        if (!periodo) {
+            errors.push({ text: 'Porfavor escribe un Periodo' });
+        }
 
         if (errors.length > 0) {
             res.render('notes/newnote', {
                 errors,
                 titulo,
-                descripcion
+                descripcion,
+                periodo
             })
         } else {
-            const nuevaNota = new Nota({ titulo, descripcion });
+            const nuevaNota = new Nota({ titulo, descripcion, periodo });
             nuevaNota.user = req.user.IDMaestro;
             nuevaNota.grado = Materia1;
             nuevaNota.centro = req.user.ClaveCentro;
@@ -101,6 +163,8 @@ router.post('/notes/newnote', isLoggedIn, async(req, res) => {
             res.redirect('/notes');
         }
     } catch (error) {
+        console.log(error.message);
+
         req.flash('error', error.message)
         res.redirect('/');
     }
@@ -124,7 +188,7 @@ router.get('/notes', async(req, res) => {
         })
     } catch (error) {
         req.flash('error', error.message)
-        res.redirect('/Mestro/NewWorkHome');
+        res.redirect('/Maestro');
     }
 });
 
@@ -146,27 +210,17 @@ router.get('/notes/checkin/:id', isLoggedIn, async(req, res) => {
     const grupo01 = [];
     const al03 = [];
     const ClaveCentro = req.user.ClaveCentro;
-    console.log(ClaveCentro);
-    console.log(datosBD);
-    console.log(req.user);
-
 
     const al033 = await alumnos.find({ "idEscuela": ClaveCentro, "materias.Materia": datosBD.grado[0].Materia, "grado": datosBD.grado[0].Gardo });
-    console.log(al033);
 
     for (x = 0; x < req.user.Materia.length; x++) {
-        console.log("Segundo");
-        if (req.user.Materia[x].Materia == datosBD.grado[0].Materia ||
+        if (req.user.Materia[x].Materia == datosBD.grado[0].Materia &&
             req.user.Materia[x].Grado == datosBD.grado[0].Gardo) {
-            console.log(req.user.Materia[x].Grupo);
             grupo01.push({ Grupo: req.user.Materia[x].Grupo })
         }
     }
-    console.log(grupo01);
-
 
     for (y = 0; y < al033.length; y++) {
-
         for (w = 0; w < grupo01.length; w++) {
             if (grupo01[w].Grupo == al033[y].grupo) {
 
@@ -191,13 +245,10 @@ router.get('/notes/checkin/:id', isLoggedIn, async(req, res) => {
             }
         }
     }
-    console.log(al03);
-
     const alum01 = JSON.stringify(al03);
     const cal01 = JSON.stringify(califica);
     const modal1 = "modi";
     res.render('notes/checkin', { alum01, mate, titulo, descripcion, modal1, dato, cal01 });
-
 });
 
 router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
@@ -208,13 +259,15 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
     const tareas = al03.titulo;
     const fecha = al03.dia;
     const centro = al03.centro;
+    const perio = al03.periodo;
+    console.log("primero");
+    console.log(al03);
+
 
     var texto = [];
     var Texto = [];
 
     try {
-
-
         const alum = JSON.parse(req.body.posteo);
         for (x = 0; x < alum.length; x++) {
             var alum98 = await tarea.find({ "idAlumnos": alum[x].id });
@@ -225,7 +278,8 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
                         Materia: Materia,
                         NomTare: tareas,
                         fecha: fecha,
-                        caliica: alum[x].calif
+                        califica: alum[x].calif,
+                        periodo: perio
                     });
                     const nuevaTarea = new tarea({
                         idAlumnos: alum[x].id,
@@ -259,7 +313,8 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
                         Materia: Materia,
                         NomTare: tareas,
                         fecha: fecha,
-                        caliica: alum[x].calif
+                        califica: alum[x].calif,
+                        periodo: perio
                     });
                     await tarea.findOneAndUpdate({ _id: id }, { $set: { idTareas: Tareas } })
                     Tareas = [];

@@ -6,11 +6,11 @@ const Nota = require('../models/Notes')
 const help = require('../lib/hander');
 var moment = require('moment');
 // const app = express();
-router.get('/Mestro/NewClass', isLoggedIn, (req, res) => {
+router.get('/Maestro/NewClass', isLoggedIn, (req, res) => {
     res.render('Maestro/newClass')
 });
 
-router.get('/Mestro/NewHomeWork', isLoggedIn, (req, res) => {
+router.get('/Maestro/NewHomeWork', isLoggedIn, (req, res) => {
     res.render('Maestro/newHomeWork')
 });
 
@@ -35,7 +35,7 @@ router.post('/notes', isLoggedIn, async(req, res) => {
     })
 });
 
-router.post('/Mestro/NewClass', isLoggedIn, async(req, res) => {
+router.post('/Maestro/NewClass', isLoggedIn, async(req, res) => {
 
     const { nombre, grado } = req.body;
     const { ClaveCentro } = req.user;

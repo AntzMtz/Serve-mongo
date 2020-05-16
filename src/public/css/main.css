@@ -1,82 +1,92 @@
-   /* https://uigradients.com/ */
-   
-   body {
-       background: #BBD2C5;
-       background: -webkit-linear-gradient(to right, #292E49, #536976, #BBD2C5);
-       background: linear-gradient(to right, #292E49, #536976, #BBD2C5);
-   }
-   
-   #login {
-       width: 100px;
-       height: 100px;
-   }
-   
-   #H4t {
-       background-color: black;
-       color: blanchedalmond;
-   }
-   
-   #Cuad {
-       margin: 3px;
-       padding: 13px;
-       /* margin-top: 3px auto; */
-   }
-   
-   #Cuad2 {
-       /* margin-top: 11px; */
-       /* padding: 13px; */
-       /* height: 200px; */
-       background-color: rgb(60, 170, 60);
-       /* margin-top: 3px auto; */
-   }
-   
-   #tabla {
-       width: 100%;
-       background-color: rgb(158, 28, 28);
-   }
-   
-   #nom1 {
-       font-size: x-small;
-       /* background-color: crimson; */
-       margin: 1px;
-       padding: 1px;
-   }
-   
-   .nom1 {
-       font-size: x-small;
-       /* background-color: crimson; */
-       margin: 1px;
-       padding: 1px;
-   }
-   
-   .check {
-       font-size: x-small;
-       justify-content: center;
-       /* background-color: crimson; */
-       margin: 1px;
-       padding: 1px;
-       width: 10px;
-       height: 10px;
-   }
-   
-   .rojo {
-       background: #BBD2C5;
-       background: -webkit-linear-gradient(to right, #292E49, #536976, #BBD2C5);
-       background: linear-gradient(to right, #292E49, #536976, #BBD2C5);
-       /* color: darkgray; */
-   }
-   
-   #cabecera {
-       height: 10px;
-       background-color: darkred;
-   }
-   
-   .norma {
-       min-width: 30px;
-   }
-   
-   #Tabla1 {
-       display: inline-block;
-       min-width: 100px;
-       background-color: darkturquoise;
-   }
+       /* https://uigradients.com/ */
+       
+       body {
+           background: #BBD2C5;
+           background: -webkit-linear-gradient(to right, #292E49, #536976, #BBD2C5);
+           background: linear-gradient(to right, #292E49, #536976, #BBD2C5);
+       }
+       
+       #login {
+           width: 100px;
+           height: 100px;
+       }
+       
+       #H4t {
+           background-color: black;
+           color: blanchedalmond;
+       }
+       
+       #Cuad {
+           margin: 3px;
+           padding: 13px;
+           /* margin-top: 3px auto; */
+       }
+       
+       #Cuad2 {
+           /* margin-top: 11px; */
+           /* padding: 13px; */
+           /* height: 200px; */
+           background-color: rgb(60, 170, 60);
+           /* margin-top: 3px auto; */
+       }
+       
+       #tabla {
+           width: 100%;
+           background-color: rgb(158, 28, 28);
+       }
+       
+       #nom1 {
+           font-size: x-small;
+           /* background-color: crimson; */
+           margin: 1px;
+           padding: 1px;
+       }
+       
+       .nom1 {
+           font-size: x-small;
+           /* background-color: crimson; */
+           margin: 1px;
+           padding: 1px;
+       }
+       
+       .check3 {
+           font-size: x-small;
+           justify-content: center;
+           background-color: rgba(255, 255, 255, 255);
+           margin: 1px;
+           padding: 1px;
+           width: 30px;
+           height: 20px;
+       }
+       
+       .check {
+           font-size: x-small;
+           justify-content: center;
+           /* background-color: crimson; */
+           margin: 1px;
+           padding: 1px;
+           width: 10px;
+           height: 10px;
+       }
+       
+       .rojo {
+           background: #BBD2C5;
+           background: -webkit-linear-gradient(to right, #292E49, #536976, #BBD2C5);
+           background: linear-gradient(to right, #292E49, #536976, #BBD2C5);
+           /* color: darkgray; */
+       }
+       
+       #cabecera {
+           height: 10px;
+           background-color: darkred;
+       }
+       
+       .norma {
+           min-width: 30px;
+       }
+       
+       #Tabla1 {
+           display: inline-block;
+           min-width: 100px;
+           background-color: darkturquoise;
+       }

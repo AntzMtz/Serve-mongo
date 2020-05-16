@@ -47,29 +47,34 @@ router.get('/Alumnos/alumnoCal/:materia,:grado', isLoggedIn, async(req, res) => 
         const materAlum = await tarea.find({ "idAlumnos": Alumnos01[o].codQr });
         var nom = Alumnos01[o].nombre + " " + Alumnos01[o].aPaterno + " " + Alumnos01[o].aMaterno;
         alu05.push({ "Nombre": nom });
-        console.log("Quien");
+        // console.log("Quien");
 
-        console.log(materAlum[0]);
+        // console.log(materAlum[0]);
 
         var idmate = materAlum[0].idTareas;
         var mate = "";
         for (p = 0; p < idmate.length; p++) {
+            console.log("nombre");
+            console.log(idmate[p]);
+
+
             if (idmate[p].Materia == materia) {
 
-                alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].caliica, "fecha": idmate[p].fecha });
+                alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].califica, "fecha": idmate[p].fecha, "periodo": idmate[p].periodo });
             }
         }
+        // console.log(alu05);
+
         alu06.push(alu05);
         alu05 = [];
     }
-    console.log("alu06");
-    console.log(alu06);
+
     var Json01 = JSON.stringify(alu06);
     var Json02 = JSON.parse(Json01);
 
     console.log("por aqui");
 
-    console.log(Json02[0]);
+    console.log(Json01);
 
     res.render('Alumno/viewAlumno', { Json01, materia, grado });
 });
