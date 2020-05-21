@@ -1,6 +1,6 @@
 <div class="container p-4" id="conti">
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-6 mx-auto">
             <div class="card text-center">
                 <div class="card-header">
                     <h3>
@@ -13,12 +13,40 @@
                     <form action="/notes/editNote/{{datosBD._id}}?_method=PUT" method="POST">
                         <input type="hidden" name="_method" value="PUT">
                         <div class="form-group">
-                            <input type="text" name="titulo" value="{{datosBD.titulo}}"  class="form-control"
-                                autofocus>
+                            <input type="text" name="titulo" value="{{datosBD.titulo}}" class="form-control" autofocus>
                         </div>
                         <div class="form-group">
-                            <textarea name="descripcion" class="form-control" >{{datosBD.descripcion}}</textarea>
+                            <textarea name="descripcion" class="form-control">{{datosBD.descripcion}}</textarea>
                         </div>
+
+                        <div class="input-group mb-3">
+
+                            <select id="Materia" value="" placeholder="Materia" name="Materia" class="form-control"
+                                onchange=evento([{{json01}}])>
+                                {{#each materia}}
+                                {{!-- <option disabled selected>{{Materia}},{{Gardo}}</option> --}}
+                                <option value={{Materia}},{{Gardo}}>
+                                    <p> {{ Materia}}, {{Gardo}} </p>
+                                </option>
+                                
+                                
+                                {{/each}}
+
+                                {{#each mate01}}
+                                <option value={{Materia}},{{Grado}}>
+                                    <p> {{ Materia}}, {{Grado}} </p>
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="number" name="periodo" value="{{datosBD.periodo}}" placeholder="Periodo"
+                                class="form-control">
+                        </div>
+
+
+
+
                         <div class="form-group">
                             <button class="btn btn-success btn-block">
                                 Edit

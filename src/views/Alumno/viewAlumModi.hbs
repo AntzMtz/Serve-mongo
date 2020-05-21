@@ -1,0 +1,100 @@
+<div class="card text-center">
+    <div class="card-header">
+        <h3>
+            Alumnos de la escuela {{escuela}}
+        </h3>
+    </div>
+    <div class="card-boddy">
+        <img id="login" src="/imagen/clase.jpg" alt="logo Antz" class="card-img-top mx-auto m-2 rounded-circle w-10">
+        {{!-- <input type="number" name="fg" id="er">
+        <input type="text" name="er" id="w"> --}}
+    </div>
+</div>
+<form action="/Alumnos/add" method="GET" enctype="multipart/form-data">
+    <div id="perio" class="card text-center">
+        Selecciona un grado y grupo
+        <select id="peri01">
+
+        </select>
+    </div>
+
+    <div id="tabla">
+        {{alumnos}}
+    </div>
+    <div class="card text-center">
+        <button class="btn btn-success btn-block">guardar</button>
+    </div>
+
+</form>
+
+<script>
+
+    function comezar() {
+
+        var str = [{}];
+        var str1 = "{{alumno01}}";
+        if (str1 == "") {
+            console.log("Vacio");
+        } else {
+            var str = str1;
+            var res = str.replace(/&quot;/g, '"');
+            var res1 = res.replace(/&#x3D;/g, '=');
+            jss = JSON.parse(res1);
+
+        }
+        console.log(jss);
+        alumBox();
+        alimView();
+
+    };
+    function alumBox() {
+        console.log("jss");
+        var miSelect = document.getElementById("peri01");
+        var miOption = document.createElement("option");
+        miOption.setAttribute("value", "Selecciona un valor");
+        miOption.text = "Selecciona un valor";
+        miOption.setAttribute('selected', "true");
+        miSelect.appendChild(miOption);
+        var gra34 = "";
+        for (x = 0; x < jss.length; x++) {
+            var grad = jss[x].grado + " " + jss[x].grupo;
+            if (gra34 == grad) {
+                console.log("grado");
+            } else {
+                console.log("No grado");
+                miOption = document.createElement("option");
+                miOption.text = grad;
+                miOption.setAttribute("value", grad);
+                miSelect.appendChild(miOption);
+                gra34 = grad;
+            }
+        }
+        miSelect.addEventListener("change", valora, false);
+    };
+    function valora() {
+
+        alimView()
+
+
+    };
+
+    function alimView() {
+        var miSelect = document.getElementById("peri01");
+        console.log(miSelect.value);
+        if(miSelect.value=="Selecciona un valor"){
+            console.log("Borra y pon todo")
+            alumViewTodo()
+        }else{
+            console.log("Filtra por grupo y grado")
+        }
+    };
+    function alumViewTodo(){
+        document.getElementById('tabla').innerHTML = "";
+        console.log(jss)
+        for(var x=0;x<jss.length;x++){
+            console.log(jss[x])
+        };
+    };
+    window.addEventListener('load', comezar, false);
+
+</script>

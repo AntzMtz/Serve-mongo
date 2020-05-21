@@ -6,7 +6,6 @@ const alumno = require('../models/alumno');
 const Mat1 = require('../models/Mat01');
 const tarea = require('../models/tareas');
 const fs = require('fs');
-
 const qrcode = require('qrcode');
 
 router.get('/Alumnos/add', isLoggedIn, async(req, res) => {
@@ -29,14 +28,32 @@ router.get('/Alumnos/alumnoCal/:materia,:grado', isLoggedIn, async(req, res) => 
     var grado = req.params.grado;
     for (m = 0; m < mater.length; m++) {
         if (mater[m].Materia == req.params.materia && mater[m].Grado == req.params.grado) {
-            json01.push({ "grupo": mater[m].Grupo });
+            json01.push({ "grupo": mater[m].Grupo, "Grado": mater[m].Grado });
         }
     }
 
-    const alumnos = await alumno.find({ "idEscuela": req.user.ClaveCentro, "materias.Materia": materia, "grado": grado });
+    // const alumnos = await alumno.find({ "idEscuela": req.user.ClaveCentro, "materias.Materia": materia, "grado": grado });
+    const alumnos = await alumno.find({
+        "idEscuela": req.user.ClaveCentro,
+        "materias": {
+            $elemMatch: {
+                "Materia": materia
+            }
+        },
+        "grado": grado
+    }, {
+        "codQr": true,
+        "nombre": true,
+        "aPaterno": true,
+        "aMaterno": true,
+        "materias.$": true,
+        "grado": true,
+        "grupo": true
+    });
+
     for (m = 0; m < alumnos.length; m++) {
         for (n = 0; n < json01.length; n++) {
-            if (alumnos[m].grupo == json01[n].grupo) {
+            if (alumnos[m].grupo == json01[n].grupo && alumnos[m].grado == json01[n].Grado) {
                 Alumnos01.push(alumnos[m])
             }
         }
@@ -45,25 +62,25 @@ router.get('/Alumnos/alumnoCal/:materia,:grado', isLoggedIn, async(req, res) => 
     var alu06 = [];
     for (o = 0; o < Alumnos01.length; o++) {
         const materAlum = await tarea.find({ "idAlumnos": Alumnos01[o].codQr });
+
         var nom = Alumnos01[o].nombre + " " + Alumnos01[o].aPaterno + " " + Alumnos01[o].aMaterno;
         alu05.push({ "Nombre": nom });
-        // console.log("Quien");
 
-        // console.log(materAlum[0]);
+        if (materAlum.length > 0) {
 
-        var idmate = materAlum[0].idTareas;
-        var mate = "";
-        for (p = 0; p < idmate.length; p++) {
-            console.log("nombre");
-            console.log(idmate[p]);
+            var idmate = materAlum[0].idTareas;
+            var mate = "";
+            for (p = 0; p < idmate.length; p++) {
+                console.log("nombre");
+                console.log(idmate[p]);
 
 
-            if (idmate[p].Materia == materia) {
+                if (idmate[p].Materia == materia && idmate[p].Grado == grado) {
 
-                alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].califica, "fecha": idmate[p].fecha, "periodo": idmate[p].periodo });
+                    alu05.push({ "NomTare": idmate[p].NomTare, "calificacion": idmate[p].califica, "fecha": idmate[p].fecha, "periodo": idmate[p].periodo });
+                }
             }
         }
-        // console.log(alu05);
 
         alu06.push(alu05);
         alu05 = [];
@@ -71,11 +88,6 @@ router.get('/Alumnos/alumnoCal/:materia,:grado', isLoggedIn, async(req, res) => 
 
     var Json01 = JSON.stringify(alu06);
     var Json02 = JSON.parse(Json01);
-
-    console.log("por aqui");
-
-    console.log(Json01);
-
     res.render('Alumno/viewAlumno', { Json01, materia, grado });
 });
 
@@ -210,6 +222,25 @@ router.post('/Alumnos/imagenes', isLoggedIn, (req, res) => {
 
 
 });
+
+router.get('/Alumnos/', isLoggedIn, async(req, res) => {
+    console.log(req.user);
+    const escuela = req.user.Centro;
+    const IdEscuela = req.user.ClaveCentro
+    const alumnos = await alumno.find({ "idEscuela": IdEscuela });
+    //console.log(alumnos);
+
+    alumnos.sort(function(a, b) {
+        return (a.grado + a.grupo + a.nombre + a.aPaterno + a.aMaterno).localeCompare((b.grado + b.grupo + b.nombre + b.aPaterno + b.aMaterno));
+    });
+    console.log(alumnos);
+
+    var alumno01 = JSON.stringify(alumnos);
+
+
+
+    res.render('Alumno/viewAlumModi.hbs', { escuela, alumnos, alumno01 })
+})
 
 
 

@@ -6,71 +6,29 @@ const tarea = require('../models/tareas');
 var moment = require('moment');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/aut');
 
-// router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
-
-//     try {
-//         var datos = [];
-//         var materia = "";
-//         var grado = "";
-//         const mate01 = req.user.Materia;
-//         mate01.sort(function(a, b) {
-//             return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
-//         });
-//         // console.log(mate01);
-//         var llave1 = "";
-//         for (x = 0; x < mate01.length; x++) {
-//             var llave = mate01[x].Materia + mate01[x].Grado;
-
-//             if (llave != llave1) {
-//                 datos.push({ "llave": mate01[x].Materia + mate01[x].Grado, "materia": mate01[x].Materia, "grado": mate01[x].Grado });
-//                 llave1 = mate01[x].Materia + mate01[x].Grado;
-//             }
-
-//         }
-//         res.render('notes/viewMateria', { datos });
-//     } catch (error) {
-//         req.flash('error_ms', error.message)
-//         console.log(error);
-
-//         res.redirect('/');
-//     }
-//     // try {
-//     //     const mate01 = req.user.Materia;
-//     //     res.render('notes/newnote', {
-//     //         fechas,
-//     //         mate01
-//     //     });
-//     // } catch (error) {
-//     //     req.flash('error_ms', error.message)
-//     //     res.redirect('/notes');
-//     // }
-// });
 
 router.get('/notes/add', isLoggedIn, (req, res) => {
     try {
         const mate02 = req.user.Materia;
-        console.log(mate02);
+
         mate02.sort(function(a, b) {
             return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
         });
-        console.log(mate02);
+
         const mate01 = [];
         var { materia, grado } = "";
         for (x = 0; x < mate02.length; x++) {
-            console.log(mate02[x].Materia);
+
             if (materia != mate02[x].Materia || grado != mate02[x].Grado) {
-                console.log("no igual");
+
                 materia = mate02[x].Materia;
                 grado = mate02[x].Grado;
                 mate01.push({ Materia: mate02[x].Materia, Grado: mate02[x].Grado })
 
-            } else {
-                console.log("igual");
-
             }
 
         }
-        console.log(mate01);
+
 
         res.render('notes/newnote', {
             fechas,
@@ -92,7 +50,7 @@ router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
         mate01.sort(function(a, b) {
             return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
         });
-        // console.log(mate01);
+
         var llave1 = "";
         for (x = 0; x < mate01.length; x++) {
             var llave = mate01[x].Materia + mate01[x].Grado;
@@ -106,7 +64,7 @@ router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
         res.render('notes/viewMateria', { datos });
     } catch (error) {
         req.flash('error_ms', error.message)
-        console.log(error);
+
 
         res.redirect('/');
     }
@@ -120,10 +78,10 @@ router.post('/notes/newnote', isLoggedIn, async(req, res) => {
         if (Materia) {
             var Mat1 = Materia.split(",")
             var Materia1 = [];
-            console.log(req.user);
+
             Materia1.push({ "Materia": Mat1[0], "Gardo": Mat1[1] })
         } else {
-            errors.push({ text: 'Porfavor escribe un Periodo' });
+            errors.push({ text: 'Porfavor escribe un Materia' });
         }
 
         if (!titulo) {
@@ -163,7 +121,7 @@ router.post('/notes/newnote', isLoggedIn, async(req, res) => {
             res.redirect('/notes');
         }
     } catch (error) {
-        console.log(error.message);
+
 
         req.flash('error', error.message)
         res.redirect('/');
@@ -255,14 +213,12 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
     const id3 = req.params.id;
     const al03 = await Nota.findById(id3);
     const Materia = al03.grado[0].Materia;
+    const Grado = al03.grado[0].Gardo;
     const IDMaestro = al03.user;
     const tareas = al03.titulo;
     const fecha = al03.dia;
     const centro = al03.centro;
     const perio = al03.periodo;
-    console.log("primero");
-    console.log(al03);
-
 
     var texto = [];
     var Texto = [];
@@ -279,7 +235,8 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
                         NomTare: tareas,
                         fecha: fecha,
                         califica: alum[x].calif,
-                        periodo: perio
+                        periodo: perio,
+                        Grado: Grado
                     });
                     const nuevaTarea = new tarea({
                         idAlumnos: alum[x].id,
@@ -314,7 +271,8 @@ router.post('/notes/checkin/:id', isLoggedIn, async(req, res) => {
                         NomTare: tareas,
                         fecha: fecha,
                         califica: alum[x].calif,
-                        periodo: perio
+                        periodo: perio,
+                        Grado: Grado
                     });
                     await tarea.findOneAndUpdate({ _id: id }, { $set: { idTareas: Tareas } })
                     Tareas = [];
@@ -340,13 +298,96 @@ router.get('/notes/edit/:id', isLoggedIn, async(req, res) => {
 
     const datosBD1 = await Nota.find({ "_id": dato })
     const datosBD = datosBD1[0];
-    res.render('notes/editNote', { datosBD });
+    const materia = datosBD1[0].grado;
+
+    const mate02 = req.user.Materia;
+    mate02.sort(function(a, b) {
+        return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
+    });
+
+
+
+    const mate01 = [];
+    var { materia1, grado } = "";
+    for (x = 0; x < mate02.length; x++) {
+
+        if (materia1 != mate02[x].Materia || grado != mate02[x].Grado) {
+
+            materia1 = mate02[x].Materia;
+            grado = mate02[x].Grado;
+            mate01.push({ Materia: mate02[x].Materia, Grado: mate02[x].Grado })
+
+        }
+
+
+    }
+
+    res.render('notes/editNote', { datosBD, materia, mate01 });
 });
 
 router.put('/notes/editNote/:id', isLoggedIn, async(req, res) => {
-    const { titulo, descripcion } = req.body;
+    const { titulo, descripcion, Materia, periodo } = req.body;
+
+    if (Materia) {
+        var Mat1 = Materia.split(",")
+        var Materia1 = [];
+        Materia1.push({ "Materia": Mat1[0], "Gardo": Mat1[1] })
+    } else {
+        errors.push({ text: 'Porfavor escribe un Periodo' });
+    }
+
+
     try {
-        await Nota.findByIdAndUpdate(req.params.id, { titulo, descripcion })
+        const alum = await Nota.findById(req.params.id);
+
+        if (alum.titulo != titulo ||
+            alum.periodo != periodo ||
+            alum.grado[0].Materia != Mat1[0] ||
+            alum.grado[0].Gardo != Mat1[1]) {
+            var tare = await tarea.find({
+                "idEscuela": alum.centro,
+                "idTareas.IdMaestro": alum.user,
+                "idTareas.Materia": alum.grado[0].Materia,
+                "idTareas.Grado": alum.grado[0].Gardo,
+                "idTareas.periodo": alum.periodo,
+                "idTareas.NomTare": alum.titulo
+            }, {
+                "_id": false,
+                "idAlumnos": true,
+                "idTareas": { $elemMatch: { "NomTare": alum.titulo } }
+            })
+
+            for (var x = 0; x < tare.length; x++) {
+
+                const materia = tare[x].idTareas;
+                for (var m = 0; m < tare[x].idTareas.length; m++) {
+
+                    await tarea.update({
+                        "idAlumnos": tare[x].idAlumnos,
+                        "idTareas": {
+                            $elemMatch: {
+                                "IdMaestro": tare[x].idTareas[m].IdMaestro,
+                                "Materia": tare[x].idTareas[m].Materia,
+                                "Grado": tare[x].idTareas[m].Grado,
+                                "NomTare": tare[x].idTareas[m].NomTare,
+                                "periodo": tare[x].idTareas[m].periodo
+                            }
+                        }
+                    }, {
+
+                        $set: {
+                            "idTareas.$.Materia": Mat1[0],
+                            "idTareas.$.Grado": Mat1[1],
+                            "idTareas.$.NomTare": titulo,
+                            "idTareas.$.periodo": periodo
+                        }
+                    })
+
+                }
+
+            }
+        }
+        await Nota.findByIdAndUpdate(req.params.id, { titulo, descripcion, "grado": Materia1, periodo })
         req.flash('success', 'Modificación correcta del registro: ' + titulo);
     } catch (error) {
         if (error.code == '11000') {
@@ -360,12 +401,71 @@ router.put('/notes/editNote/:id', isLoggedIn, async(req, res) => {
 
 router.delete('/notes/editNote/:id', isLoggedIn, async(req, res) => {
     try {
+        const find = await Nota.findById(req.params.id);
+        var fin = await tarea.update({
+            "idTareas": {
+                $elemMatch: {
+                    "IdMaestro": find.user,
+                    "Materia": find.grado[0].Materia,
+                    "Grado": find.grado[0].Gardo,
+                    "NomTare": find.titulo,
+                    "periodo": find.periodo
+                }
+            }
+        }, {
+            '$pull': { 'idTareas': { "NomTare": find.titulo } }
+        }, { multi: true })
+
         const del = await Nota.findByIdAndDelete(req.params.id);
-        req.flash('success', 'Se elimino el registro ' + del.titulo + " de forma exitosa");
+        req.flash('success', 'Se elimino el registro ' + find.titulo + " de forma exitosa");
     } catch (error) {
         req.flash('error_ms', error.message);
     }
     res.redirect('/notes')
 });
+
+
+
+
+// router.get('/notes/viewHomeWork', isLoggedIn, (req, res) => {
+
+//     try {
+//         var datos = [];
+//         var materia = "";
+//         var grado = "";
+//         const mate01 = req.user.Materia;
+//         mate01.sort(function(a, b) {
+//             return (a.Materia + a.Grado).localeCompare((b.Materia + b.Grado));
+//         });
+//         // console.log(mate01);
+//         var llave1 = "";
+//         for (x = 0; x < mate01.length; x++) {
+//             var llave = mate01[x].Materia + mate01[x].Grado;
+
+//             if (llave != llave1) {
+//                 datos.push({ "llave": mate01[x].Materia + mate01[x].Grado, "materia": mate01[x].Materia, "grado": mate01[x].Grado });
+//                 llave1 = mate01[x].Materia + mate01[x].Grado;
+//             }
+
+//         }
+//         res.render('notes/viewMateria', { datos });
+//     } catch (error) {
+//         req.flash('error_ms', error.message)
+//         console.log(error);
+
+//         res.redirect('/');
+//     }
+//     // try {
+//     //     const mate01 = req.user.Materia;
+//     //     res.render('notes/newnote', {
+//     //         fechas,
+//     //         mate01
+//     //     });
+//     // } catch (error) {
+//     //     req.flash('error_ms', error.message)
+//     //     res.redirect('/notes');
+//     // }
+// });
+
 
 module.exports = router;
