@@ -83,6 +83,14 @@
        
        .norma {
            min-width: 30px;
+           /* color: rgb(0, 119, 255); */
+           /* background-color: rgb(20, 194, 35); */
+       }
+       
+       .norma1 {
+           /* min-width: 30px; */
+           /* background-color: rgb(21, 255, 0); */
+           text-align: center;
        }
        
        #Tabla1 {
